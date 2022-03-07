@@ -7,7 +7,6 @@
  """
 
 #!/usr/bin/env python3
-from cmath import inf
 import os
 from typing import List
 
