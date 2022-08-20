@@ -1,11 +1,3 @@
-"""
- # @ Author: OmegaGae
- # @ Create Time: 2022-03-03 13:41:10
- # @ Modified by: OmegaGae
- # @ Modified time: 2022-03-07 16:18:02
- # @ Description: Ready for work !!
- """
-
 #!/usr/bin/env python3
 import os
 from typing import List
@@ -30,7 +22,7 @@ class Editfile:
 
         self.filename = filename
         print(self.filename)
-        self.data_dir = os.path.join(os.path.dirname(__file__), "files")
+        self.data_dir = os.path.join(os.path.dirname(__file__), "edit")
         self.data_path = os.path.join(self.data_dir, filename)
 
     def readtxt(self):
@@ -45,7 +37,14 @@ class Editfile:
             return self.textfile
 
     @classmethod
-    def find_infinitive_verbs(cls, tense_verbs: list) -> List:
+    def __find_infinitive_verbs(cls, tense_verbs: list) -> List:
+        """
+        Find in the list, all infinitive verbs
+
+        :param tense_verbs: list of all tense verbs
+
+        :return: all infinitive verbs (list)
+        """
 
         infinitive = []
 
@@ -55,7 +54,30 @@ class Editfile:
         return infinitive
 
     @classmethod
-    def _check_data_format(cls, tense_verbs: list, data_to_check: list):
+    def __check_data_format(cls, tense_verbs: list, data_to_check: list) -> int:
+        """
+        Check if the entry data respects the verben_lernen format.
+
+        :param tense_verbs: list of all tense verbs
+        :param data_to_check: list of data to check, data should respect tense verben format:
+            - Waiting format: 
+                [
+                    "infinitive verb",
+                    "conjugate verb to 3rd singular form",
+                    "preterite verb in 3rd singular form",
+                    "perfect with auxiliary in 3rd singular form",
+                    "level:A1-C2"
+                ]
+
+        :return: 0 for success (int)
+
+        :raise ValueError: Error raised when these following mistakes are made:
+            - Data length is incorrect,
+            - This verb and his tenses are already known by the VerbenLernen App,
+            - First element in the list is not consider as german infinitive verb,
+            - The auxiliary enter is incorrect,
+            - The level enter is incorrect.
+        """
 
         if len(data_to_check) != 5:
             raise ValueError(ERRORS_EDITFILE.get(0))
@@ -64,35 +86,43 @@ class Editfile:
         infinive = [
             v for i, v in enumerate(data_to_check[0]) if i >= len_infinitive_verb - 2
         ]
-        if (infinive == ["e", "n"]) is False:
-            if (infinive == ["r", "n"]) is False:
+        if not (infinive == ["e", "n"]):
+            if not (infinive == ["r", "n"]):
                 raise ValueError(ERRORS_EDITFILE.get(2))
 
-        infinive_verbs = Editfile.find_infinitive_verbs(tense_verbs)
+        infinive_verbs = Editfile.__find_infinitive_verbs(tense_verbs)
         if data_to_check[0] in infinive_verbs:
             raise ValueError(ERRORS_EDITFILE.get(1))
 
         perfect = data_to_check[3].split()
-        if (perfect[0] in ["hat", "ist"]) is False:
+        if not (perfect[0] in ["hat", "ist"]):
             raise ValueError(ERRORS_EDITFILE.get(3))
 
-        if (data_to_check[4] in ["A1", "A2", "B1", "B2", "C1", "C2"]) is False:
+        if not (data_to_check[4] in ["A1", "A2", "B1", "B2", "C1", "C2"]):
             raise ValueError(ERRORS_EDITFILE.get(4))
+
+        return 0
 
     def writetxt(self, data_to_write: list) -> None:
         """
         Only txt extension are writable by this function.
         It will use the filename given during object creation.
 
-        data_to_write: Data you want to write in the txt file. Language data must be german.
-                       Waiting format: ["infinitive verb","conjugate verb to 3rd singular form","preterite verb in 3rd singular form","perfect with auxiliary in 3rd singular form","level:A1-C2"]
-                       example: ["fahren","Fährt", "Fuhr","ist gefahren", "A2"]
+        :param data_to_write: Data you want to write in the txt file. Language data must be german.
+            - Waiting format: 
+                [
+                    "infinitive verb",
+                    "conjugate verb to 3rd singular form",
+                    "preterite verb in 3rd singular form",
+                    "perfect with auxiliary in 3rd singular form",
+                    "level:A1-C2"
+                ]
+            - example: ["fahren","Fährt", "Fuhr","ist gefahren", "A2"]
         """
-        txt = Editfile(self.filename)
-        lecture_txt = txt.readtxt()
-        Editfile._check_data_format(
+        lecture_txt = self.readtxt()
+        Editfile.__check_data_format(
             lecture_txt, data_to_write
-        )  # If nothing is raise, format is good, data can be written
+        )  # If nothing is raised, format is good, data can be written
         str_data_to_write = "\n" + " ".join(list(map(str, data_to_write)))
 
         if self.filename.split(".")[1] == "txt":

@@ -8,7 +8,7 @@
  # @ Description: Ready for work !!
  """
 from typing import Dict
-from lib.editfiles.editfile import Editfile
+from lib.edit.editfile import Editfile
 
 
 class HandlerTenseVerbs:
