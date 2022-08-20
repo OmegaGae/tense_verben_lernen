@@ -1,1 +1,9 @@
 #file should be ignore by .git
+
+#__pycache__
+__pycache__/
+*.pyc
+
+*.vscode
+
+
