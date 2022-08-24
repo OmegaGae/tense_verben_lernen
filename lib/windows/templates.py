@@ -3,7 +3,6 @@
 
 import sys
 from pathlib import Path
-from turtle import width
 from typing import Optional
 
 path_test = Path(__file__).resolve().parents[2]
@@ -23,7 +22,6 @@ from lib.edit.game_text import (
     valide_text,
 )
 from tkinter.scrolledtext import ScrolledText
-from tkinter.constants import END
 
 
 class DisplayTextFrame:
@@ -59,7 +57,8 @@ class GamePresentationTemplate(ttk.Frame):
         """
         self.parent = parent
         super().__init__(parent)
-        self.pack()  # pack frame completly in parent (size)
+
+        self.pack(fill=tk.X, pady=50)  # pack frame completly in parent (size)
 
     def scrowling_text(self, width: Optional[int] = None, height: Optional[int] = None):
         """
@@ -70,10 +69,9 @@ class GamePresentationTemplate(ttk.Frame):
 
         """
         scrowling_text = ScrolledText(self, width=width, height=height)
-        scrowling_text.insert(END, presentation_text)
+        scrowling_text.insert(tk.END, presentation_text)
         scrowling_text.pack(fill=tk.BOTH, side=tk.TOP, expand=True, padx=5)
         scrowling_text.configure(state=tk.DISABLED)
-        scrowling_text.focus_set()
 
     def start_button(self):
         """
@@ -103,23 +101,78 @@ class GamePageTemplate(ttk.Frame):
         super().__init__(parent)
         self.pack(fill=tk.BOTH, expand=True)
 
-        # define weigth of column cell
-        self.columnconfigure(0, weight=1)
-        self.columnconfigure(1, weight=1)
-        self.columnconfigure(2, weight=1)
-        self.columnconfigure(3, weight=1)
+        # frames creation
+        frame_one = ttk.Frame(self, relief=tk.RIDGE)
+        frame_one.pack(fill=tk.X, side=tk.TOP, pady=10)
+        frame_two = ttk.Frame(self, relief=tk.RIDGE)
+        frame_two.pack(fill=tk.X, pady=35)
+        frame_three = ttk.Frame(self, relief=tk.RIDGE)
+        frame_three.pack(fill=tk.X)
+        frame_four = ttk.Frame(self, relief=tk.RIDGE)
+        frame_four.pack(fill=tk.X, pady=15)
+        frame_seven = ttk.Frame(self, relief=tk.RIDGE)
+        frame_seven.pack(fill=tk.X, side=tk.BOTTOM, pady=10)
 
-        label_game = tk.Label(self, text=game_title)
-        label_game.grid(column=1, row=0, pady=5, columnspan=2, sticky=tk.NS)
+        # define variable
+        imperfect_entried = tk.StringVar()
+        preterite_entried = tk.StringVar()
 
-        label_infinitive = tk.Label(self, text=infinitive_text, anchor=tk.W)
-        label_infinitive.grid(column=0, row=2, columnspan=2, sticky=tk.NS)
+        label_game = tk.Label(frame_one, text=game_title, height=1, relief=tk.RIDGE)
+        label_game.pack(fill=tk.X, pady=5)
 
-        label_imperfect = tk.Label(self, text=imperfect_tense_text, anchor=tk.W)
-        label_imperfect.grid(column=0, row=4, columnspan=2, sticky=tk.NS)
+        label_infinitive = ttk.Label(
+            frame_two, text=infinitive_text, width=35, relief=tk.RIDGE, anchor=tk.E
+        )
+        label_infinitive.pack(side=tk.LEFT, padx=10)
 
-        label_preterite = tk.Label(self, text=preterite_tense_text, anchor=tk.W)
-        label_preterite.grid(column=3, row=4, columnspan=2, sticky=tk.W)
+        text_infinite = tk.Text(frame_two, height=1, width=30)
+        text_infinite.insert(tk.END, "infinitve verb")
+        text_infinite.config(state=tk.DISABLED)
+        text_infinite.pack(side=tk.RIGHT, padx=10)
+        text_infinite.focus()
+
+        label_imperfect = ttk.Label(
+            frame_three,
+            text=imperfect_tense_text,
+            width=35,
+            anchor=tk.CENTER,
+            relief=tk.RIDGE,
+        )
+        label_imperfect.pack(side=tk.LEFT, padx=10, ipadx=5)
+
+        label_preterite = ttk.Label(
+            frame_three,
+            text=preterite_tense_text,
+            anchor=tk.CENTER,
+            width=35,
+            relief=tk.RIDGE,
+        )
+        label_preterite.pack(side=tk.RIGHT, padx=10, ipadx=5)
+
+        entry_imperfect = ttk.Entry(
+            frame_four,
+            textvariable=imperfect_entried,
+            width=35,
+        )
+        entry_imperfect.pack(side=tk.LEFT, padx=10, ipadx=5)
+        entry_imperfect.focus_get()
+
+        entry_preterite = ttk.Entry(
+            frame_four,
+            text=preterite_entried,
+            width=35,
+        )
+        entry_preterite.pack(side=tk.RIGHT, padx=10, ipadx=5)
+        entry_preterite.focus_get()
+
+        left_time = ttk.Progressbar(
+            frame_seven, orient=tk.HORIZONTAL, mode="determinate"
+        )
+        left_time.start(395)  # 0,395 s
+        left_time.step(1000.0)
+        left_time.pack(fill=tk.X, padx=10, pady=5)
+
+        left_time.after(40000, left_time.stop)  # 40 s == normal mode
 
 
 class GameSuccessTemplate:
