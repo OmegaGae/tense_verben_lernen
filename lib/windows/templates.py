@@ -19,7 +19,7 @@ from lib.edit.game_text import (
     preterite_tense_text,
     next_text,
     remain_verbs_text,
-    valide_text,
+    submit_text,
 )
 from tkinter.scrolledtext import ScrolledText
 
@@ -105,13 +105,19 @@ class GamePageTemplate(ttk.Frame):
         frame_one = ttk.Frame(self, relief=tk.RIDGE)
         frame_one.pack(fill=tk.X, side=tk.TOP, pady=10)
         frame_two = ttk.Frame(self, relief=tk.RIDGE)
-        frame_two.pack(fill=tk.X, pady=35)
+        frame_two.pack(fill=tk.X, pady=40)
         frame_three = ttk.Frame(self, relief=tk.RIDGE)
         frame_three.pack(fill=tk.X)
         frame_four = ttk.Frame(self, relief=tk.RIDGE)
         frame_four.pack(fill=tk.X, pady=15)
+        frame_four = ttk.Frame(self, relief=tk.RIDGE)
+        frame_four.pack(fill=tk.X)
+        frame_five = ttk.Frame(self, relief=tk.RIDGE)
+        frame_five.pack(fill=tk.X, pady=10, side=tk.BOTTOM)
         frame_seven = ttk.Frame(self, relief=tk.RIDGE)
         frame_seven.pack(fill=tk.X, side=tk.BOTTOM, pady=10)
+        frame_eight = ttk.Frame(self, relief=tk.RIDGE)
+        frame_eight.pack(fill=tk.X, side=tk.BOTTOM, pady=75)
 
         # define variable
         imperfect_entried = tk.StringVar()
@@ -121,7 +127,7 @@ class GamePageTemplate(ttk.Frame):
         label_game.pack(fill=tk.X, pady=5)
 
         label_infinitive = ttk.Label(
-            frame_two, text=infinitive_text, width=35, relief=tk.RIDGE, anchor=tk.E
+            frame_two, text=infinitive_text, width=40, relief=tk.RIDGE, anchor=tk.E
         )
         label_infinitive.pack(side=tk.LEFT, padx=10)
 
@@ -166,13 +172,25 @@ class GamePageTemplate(ttk.Frame):
         entry_preterite.focus_get()
 
         left_time = ttk.Progressbar(
-            frame_seven, orient=tk.HORIZONTAL, mode="determinate"
+            frame_five, orient=tk.HORIZONTAL, mode="determinate"
         )
         left_time.start(395)  # 0,395 s
         left_time.step(1000.0)
         left_time.pack(fill=tk.X, padx=10, pady=5)
 
         left_time.after(40000, left_time.stop)  # 40 s == normal mode
+
+        label_preterite = ttk.Label(
+            frame_seven,
+            text=remain_verbs_text,
+            anchor=tk.CENTER,
+            width=35,
+            relief=tk.RIDGE,
+        )
+        label_preterite.pack(side=tk.LEFT, padx=10, ipadx=5)
+
+        submit_button = ttk.Button(frame_eight, text=submit_text, command=root.quit)
+        submit_button.pack(anchor=tk.CENTER)
 
 
 class GameSuccessTemplate:
