@@ -3,6 +3,7 @@
 
 import sys
 from pathlib import Path
+from tkinter.messagebox import NO
 from typing import Optional, Union, List
 
 path_test = Path(__file__).resolve().parents[2]
@@ -80,12 +81,12 @@ def check_input(value_to_check: Union[tuple, List[tuple]]) -> Union[Exception, N
 
 
 def create_frame(
-    root: ttk.Frame,
+    frame: ttk.Frame,
     tk_relief: Union[TkRelief, str] = TkRelief.FLAT,
     **pack_options,
 ) -> ttk.Frame:
     """Create a frame that will be contained in an already existing parent frame
-    :param root: Parent frame
+    :param frame: Parent frame
     :param tk_relief: Tkinter constant for frame relief. Default set to flat
     :param pack_options: Configuration options to pack the created frame.
     Only pack options are expected.
@@ -95,14 +96,14 @@ def create_frame(
     :raise TypeError: Error raised when input type is different from expected type"""
 
     # check input
-    check_input((root, ttk.Frame))
+    check_input((frame, ttk.Frame))
 
     if not (isinstance(tk_relief, TkRelief) or isinstance(tk_relief, str)):
         raise TypeError(
             f"Your Input type:{type(tk_relief)}, is different from expected input type"
         )
 
-    frame = ttk.Frame(root, relief=tk_relief)
+    frame = ttk.Frame(frame, relief=tk_relief)
     try:
         frame.pack(
             fill=pack_options.get("fill"),
@@ -120,21 +121,19 @@ def create_frame(
 
 
 def create_label(
-    root: ttk.Frame,
+    frame: ttk.Frame,
     text: str,
     tk_relief: Union[TkRelief, str] = TkRelief.FLAT,
     tk_anchor: Union[TkAnchorNSticky, str] = TkAnchorNSticky.CENTER,
-    tk_height: Optional[int] = None,
     tk_width: Optional[int] = None,
     **pack_options,
 ) -> ttk.Label:
     """Create a label that will be contained in an already existing parent frame
 
-    :param root: Parent frame
+    :param frame: Parent frame
     :param text: Label text
     :param tk_relief: Tkinter constant for label relief. Default set to flat
     :param tk_anchor: Tkinter constant for label relief. Default set to center
-    :param tk_height: (optional) Height of the label widget
     :param tk_width: (optional) Width of the label widget
     :param pack_options: Configuration options to pack the created label.
     Only pack options are expected.
@@ -144,7 +143,7 @@ def create_label(
     :raise TypeError: Error raised when input type is different from expected type"""
 
     # check input
-    inputs_to_check = [(root, ttk.Frame), (text, str)]
+    inputs_to_check = [(frame, ttk.Frame), (text, str)]
     check_input(inputs_to_check)
 
     # add check for size parameter ?
@@ -160,9 +159,8 @@ def create_label(
         )
 
     tk_label = ttk.Label(
-        root,
+        frame,
         text=text,
-        height=tk_height,
         width=tk_width,
         relief=tk_relief,
         anchor=tk_anchor,
@@ -183,7 +181,7 @@ def create_label(
 
 
 def create_text(
-    root: ttk.Frame,
+    frame: ttk.Frame,
     text: str,
     tk_width: int,
     tk_height: int = 1,
@@ -192,7 +190,7 @@ def create_text(
 ) -> tk.Text:
     """Create a tkinter text that will be contained in an already existing parent frame
 
-    :param root: Parent frame
+    :param frame: Parent frame
     :param text: Text to insert into tkinter text widget
     :param tk_width: Width of the text widget
     :param tk_height: Height of the text widget. Default set to 1
@@ -207,7 +205,7 @@ def create_text(
 
     # check input
     inputs_to_check = [
-        (root, ttk.Frame),
+        (frame, ttk.Frame),
         (text, str),
         (tk_width, int),
         (tk_height, int),
@@ -219,7 +217,7 @@ def create_text(
             f"Your Input type:{type(tk_state)}, is different from expected input type"
         )
 
-    tk_text = tk.Text(root, height=tk_height, width=tk_width, state=tk_state)
+    tk_text = tk.Text(frame, height=tk_height, width=tk_width, state=tk_state)
     tk_text.insert(tk.END, text)
     try:
         tk_text.pack(
@@ -238,18 +236,16 @@ def create_text(
 
 
 def create_entry(
-    root: ttk.Frame,
+    frame: ttk.Frame,
     tk_textvariable: tk.StringVar,
     tk_width: int,
-    tk_height: int = 1,
     **pack_options,
 ) -> tk.Entry:
     """Create a tkinter entry that will be contained in an already existing parent frame
 
-    :param root: Parent frame
+    :param frame: Parent frame
     :param tk_textvariable: Catch user input text into this parameter
     :param tk_width: Width of the entry widget
-    :param tk_height: Height of the entry widget. Default set to 1
     :param pack_options: Configuration options to pack the created entry.
     Only pack options are expected.
 
@@ -259,16 +255,13 @@ def create_entry(
 
     # check input
     inputs_to_check = [
-        (root, ttk.Frame),
+        (frame, ttk.Frame),
         (tk_textvariable, tk.StringVar),
         (tk_width, int),
-        (tk_height, int),
     ]
     check_input(inputs_to_check)
 
-    tk_entry = tk.Entry(
-        root, textvariable=tk_textvariable, height=tk_height, width=tk_width
-    )
+    tk_entry = tk.Entry(frame, textvariable=tk_textvariable, width=tk_width)
     try:
         tk_entry.pack(
             fill=pack_options.get("fill"),
@@ -286,7 +279,7 @@ def create_entry(
 
 
 def create_progress_bar(
-    root: ttk.Frame,
+    frame: ttk.Frame,
     tk_orientation: Union[TkOrientation, str] = TkOrientation.HORIZONTAL,
     tk_mode: Union[TkMode, str] = TkMode.DETERMINATE,
     interval_time: int = 395,
@@ -298,7 +291,7 @@ def create_progress_bar(
 ) -> ttk.Progressbar:
     """Create a tkinter progressbar that will be contained in an already existing parent frame
 
-    :param root: Parent frame
+    :param frame: Parent frame
     :param tk_orientation: Set progressbar orientation
     :param tk_mode: Set mode of the progressbar. Default mode set to determinate.
     :param interval_time: Recurrence time for the progressbar to move. Defalut set to 395 ms
@@ -315,7 +308,7 @@ def create_progress_bar(
 
     # check input
     inputs_to_check = [
-        (root, ttk.Frame),
+        (frame, ttk.Frame),
         (interval_time, int),
         (incrementation_time, float),
         (stop_time, int),
@@ -335,7 +328,7 @@ def create_progress_bar(
         )
 
     tk_progress_bar = ttk.Progressbar(
-        root, orient=tk_orientation, mode=tk_mode, length=tk_length
+        frame, orient=tk_orientation, mode=tk_mode, length=tk_length
     )
     tk_progress_bar.start(interval_time)
     tk_progress_bar.step(incrementation_time)
@@ -361,14 +354,14 @@ def create_progress_bar(
 
 
 def create_button(
-    root: ttk.Frame,
+    frame: ttk.Frame,
     text: str,
     callable_function=None,
     **pack_options,
 ) -> ttk.Button:
     """Create a tkinter button that will be contained in an already existing parent frame
 
-    :param root: Parent frame
+    :param frame: Parent frame
     :param text: Text to insert into tkinter Button widget
     :param callable_function: Function to call when clicking on the button
     :param pack_options: Configuration options to pack the created button.
@@ -380,15 +373,15 @@ def create_button(
 
     # check input
     inputs_to_check = [
-        (root, ttk.Frame),
+        (frame, ttk.Frame),
         (text, str),
     ]
     check_input(inputs_to_check)
 
     if not callable_function:
-        callable_function = root.quit
+        callable_function = frame.quit
 
-    tk_button = ttk.Button(root, text=text, command=callable_function)
+    tk_button = ttk.Button(frame, text=text, command=callable_function)
 
     try:
         tk_button.pack(
@@ -411,7 +404,7 @@ class GamePresentationTemplate(ttk.Frame):
     Template for game presentation
     """
 
-    def __init__(self, parent):
+    def __init__(self, parent, presentation_text):
         """
         Template game presentation.
         Find here the presentation and the rules of the game
@@ -419,32 +412,64 @@ class GamePresentationTemplate(ttk.Frame):
         you can go to the next page by clicking onto the next button.
 
         :param parent: root widget
+        :param presentation_text: game presentation
         """
         self.parent = parent
+        self.presentation_text = presentation_text
         super().__init__(parent)
 
-        self.pack(fill=tk.X, pady=50)  # pack frame completly in parent (size)
+        self.pack(fill=tk.X, expand=True)
 
-    def scrowling_text(self, width: Optional[int] = None, height: Optional[int] = None):
+        self.frames = []
+        self.nber_frames = 2
+        self.config_frames = {
+            0: {"fill": tk.X, "side": tk.TOP, "pady": 10},
+            1: {"fill": tk.X, "side": tk.BOTTOM, "pady": 10},
+        }
+
+    def template_launcher(self):
+        """Default function to call to call the template window"""
+        # create frames
+        for nber in range(self.nber_frames):
+            frame = create_frame(
+                self,
+                fill=self.config_frames[nber]["fill"],
+                side=self.config_frames[nber]["side"],
+                pady=self.config_frames[nber]["pady"],
+            )
+            self.frames.append(frame)
+
+        self.scrowling_text(self.frames[0])
+        self.start_button(self.frames[1])
+
+    def scrowling_text(
+        self,
+        frame: ttk.Frame,
+        width: Optional[int] = None,
+        height: Optional[int] = None,
+    ):
         """
         Print a text in a scrowling text box.
 
-        :param width: define the scrowling text box width. Default set to None
-        :param heigth: define the scrowling text box heigth. Default set to None
+        :param frame: Parent frame
+        :param width: (Optional) define the scrowling text box width. Default set to None
+        :param heigth: (Optional) define the scrowling text box heigth. Default set to None
 
         """
-        scrowling_text = ScrolledText(self, width=width, height=height)
-        scrowling_text.insert(tk.END, presentation_text)
+        scrowling_text = ScrolledText(frame, width=width, height=height)
+        scrowling_text.insert(tk.END, self.presentation_text)
         scrowling_text.pack(fill=tk.BOTH, side=tk.TOP, expand=True, padx=5)
         scrowling_text.configure(state=tk.DISABLED)
 
-    def start_button(self):
+    def start_button(self, frame: ttk.Frame):
         """
         create a start button for the frame
+
+        :param frame: Parent frame
         """
-        start_button = ttk.Button(self, text=start_text, command=lambda: self.quit())
-        start_button.pack(side=tk.BOTTOM, ipadx=5, ipady=5, pady=35)
-        start_button.focus_set()
+        start_button = ttk.Button(frame, text=start_text, command=frame.quit)
+        start_button.pack(side=tk.BOTTOM, ipadx=5, ipady=5)
+        start_button.focus_get()
 
 
 class GamePageTemplate(ttk.Frame):
@@ -466,103 +491,108 @@ class GamePageTemplate(ttk.Frame):
         super().__init__(parent)
         self.pack(fill=tk.BOTH, expand=True)
 
-        # frames creation
-        frame_one = ttk.Frame(self, relief=tk.RIDGE)
-        frame_one.pack(fill=tk.X, side=tk.TOP, pady=10)
-
-        frame_two = ttk.Frame(self, relief=tk.RIDGE)
-        frame_two.pack(fill=tk.X, pady=40)
-
-        frame_three = ttk.Frame(self, relief=tk.RIDGE)
-        frame_three.pack(fill=tk.X)
-
-        frame_four = ttk.Frame(self, relief=tk.RIDGE)
-        frame_four.pack(fill=tk.X, pady=15)
-
-        frame_four = ttk.Frame(self, relief=tk.RIDGE)
-        frame_four.pack(fill=tk.X)
-
-        frame_five = ttk.Frame(self, relief=tk.RIDGE)
-        frame_five.pack(fill=tk.X, pady=10, side=tk.BOTTOM)
-
-        frame_seven = ttk.Frame(self, relief=tk.RIDGE)
-        frame_seven.pack(fill=tk.X, side=tk.BOTTOM, pady=10)
-
-        frame_eight = ttk.Frame(self, relief=tk.RIDGE)
-        frame_eight.pack(fill=tk.X, side=tk.BOTTOM, pady=75)
-
         # define variable
-        imperfect_entried = tk.StringVar()
-        preterite_entried = tk.StringVar()
+        self.imperfect_entried = tk.StringVar()
+        self.preterite_entried = tk.StringVar()
 
-        label_game = tk.Label(frame_one, text=game_title, height=1, relief=tk.RIDGE)
-        label_game.pack(fill=tk.X, pady=5)
+        self.frames = []
+        self.nber_frames = 8
+        self.config_frames = {
+            0: {"fill": tk.X, "side": tk.TOP, "pady": 10},
+            1: {"fill": tk.X, "side": None, "pady": 40},
+            2: {"fill": tk.X, "side": None, "pady": None},
+            3: {"fill": tk.X, "side": None, "pady": 15},
+            4: {"fill": tk.X, "side": None, "pady": None},
+            5: {"fill": tk.X, "side": tk.BOTTOM, "pady": 10},
+            6: {"fill": tk.X, "side": tk.BOTTOM, "pady": 10},
+            7: {"fill": tk.X, "side": tk.BOTTOM, "pady": 75},
+        }
 
-        label_infinitive = ttk.Label(
-            frame_two, text=infinitive_text, width=40, relief=tk.RIDGE, anchor=tk.E
+    def template_launcher(self):
+        """Default function to call to call the template window"""
+
+        # create frames
+        for nber in range(self.nber_frames):
+            frame = create_frame(
+                self,
+                fill=self.config_frames[nber]["fill"],
+                side=self.config_frames[nber]["side"],
+                pady=self.config_frames[nber]["pady"],
+            )
+            self.frames.append(frame)
+
+        # create widgets
+
+        self.label_game = create_label(
+            self.frames[0], text=game_title, tk_height=1, fill=tk.X, pady=5
         )
-        label_infinitive.pack(side=tk.LEFT, padx=10)
+        self.label_infinitive = create_label(
+            self.frames[1],
+            text=infinitive_text,
+            tk_width=40,
+            tk_anchor=tk.E,
+            side=tk.LEFT,
+            padx=10,
+        )
 
-        text_infinite = tk.Text(frame_two, height=1, width=30)
-        text_infinite.insert(tk.END, "infinitve verb")
-        text_infinite.config(state=tk.DISABLED)
-        text_infinite.pack(side=tk.RIGHT, padx=10)
-        text_infinite.focus()
+        self.text_infinitive = create_text(
+            self.frames[1], text="infinitive verb", tk_width=30, side=tk.RIGHT, padx=10
+        )
+        self.text_infinitive.focus_get()
 
-        label_imperfect = ttk.Label(
-            frame_three,
+        self.label_imperfect = create_label(
+            self.frames[2],
             text=imperfect_tense_text,
-            width=35,
-            anchor=tk.CENTER,
-            relief=tk.RIDGE,
+            tk_width=35,
+            tk_anchor=tk.CENTER,
+            side=tk.LEFT,
+            padx=10,
+            ipadx=5,
         )
-        label_imperfect.pack(side=tk.LEFT, padx=10, ipadx=5)
-
-        label_preterite = ttk.Label(
-            frame_three,
+        self.label_preterite = create_label(
+            self.frames[2],
             text=preterite_tense_text,
-            anchor=tk.CENTER,
-            width=35,
-            relief=tk.RIDGE,
+            tk_width=35,
+            tk_anchor=tk.CENTER,
+            side=tk.RIGHT,
+            padx=10,
+            ipadx=5,
         )
-        label_preterite.pack(side=tk.RIGHT, padx=10, ipadx=5)
 
-        entry_imperfect = ttk.Entry(
-            frame_four,
-            textvariable=imperfect_entried,
-            width=35,
+        self.entry_imperfect = create_entry(
+            self.frames[3],
+            tk_textvariable=self.imperfect_entried,
+            tk_width=35,
+            side=tk.LEFT,
+            padx=10,
+            ipadx=5,
         )
-        entry_imperfect.pack(side=tk.LEFT, padx=10, ipadx=5)
-        entry_imperfect.focus_get()
+        self.entry_imperfect.focus_get()
 
-        entry_preterite = ttk.Entry(
-            frame_four,
-            text=preterite_entried,
-            width=35,
+        self.entry_preterite = create_entry(
+            self.frames[3],
+            tk_textvariable=self.preterite_entried,
+            tk_width=35,
+            side=tk.CENTER,
+            padx=10,
+            ipadx=5,
         )
-        entry_preterite.pack(side=tk.RIGHT, padx=10, ipadx=5)
-        entry_preterite.focus_get()
+        self.entry_preterite.focus_get()
 
-        left_time = ttk.Progressbar(
-            frame_five, orient=tk.HORIZONTAL, mode="determinate"
+        self.progress_bar = create_progress_bar(
+            self.frames[4], fill=tk.X, padx=10, pady=5
         )
-        left_time.start(395)  # 0,395 s
-        left_time.step(1000.0)
-        left_time.pack(fill=tk.X, padx=10, pady=5)
-
-        left_time.after(40000, left_time.stop)  # 40 s == normal mode
-
-        label_preterite = ttk.Label(
-            frame_seven,
+        self.label_remain_verbs = create_label(
+            self.frames[6],
             text=remain_verbs_text,
-            anchor=tk.CENTER,
-            width=35,
-            relief=tk.RIDGE,
+            tk_width=35,
+            side=tk.LEFT,
+            padx=10,
+            ipadx=5,
         )
-        label_preterite.pack(side=tk.LEFT, padx=10, ipadx=5)
-
-        submit_button = ttk.Button(frame_eight, text=submit_text, command=root.quit)
-        submit_button.pack(anchor=tk.CENTER)
+        self.submit_button = create_button(
+            self.frames[7], text=submit_text, anchor=tk.CENTER
+        )
 
 
 class GameSuccessTemplate:
@@ -589,6 +619,5 @@ if __name__ == "__main__":
     root.geometry("550x500")
     root.resizable(0, 0)  # make sure full screen is not availabe
     pr = GamePageTemplate(root)
-    # pr.scrowling_text()
-    # pr.start_button()
+    pr.template_launcher()
     root.mainloop()

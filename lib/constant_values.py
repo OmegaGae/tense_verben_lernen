@@ -2,11 +2,11 @@
 Find here all Enum values for Verben Lernen application
 
 """
-from enum import Enum, unique
+from enum import Enum, IntEnum, unique
 
 
 @unique
-class GradePlayer(Enum):
+class GradePlayer(str, Enum):
     """
     Get the grade of the player
     """
@@ -44,7 +44,7 @@ class PackErrors(TkErrors):
         super().__init__(msg)
 
 
-class TkBooleans(Enum):
+class TkBooleans(IntEnum):
     """Symbolic constants for Tk"""
 
     NO = FALSE = OFF = 0
@@ -52,7 +52,7 @@ class TkBooleans(Enum):
 
 
 @unique
-class TkAnchorNSticky(Enum):
+class TkAnchorNSticky(str, Enum):
     """anchor and sticky"""
 
     N = "n"
@@ -69,7 +69,7 @@ class TkAnchorNSticky(Enum):
     CENTER = "center"
 
 
-class TkFilling(Enum):
+class TkFilling(str, Enum):
     """fill"""
 
     NONE = "none"
@@ -79,7 +79,7 @@ class TkFilling(Enum):
 
 
 @unique
-class TkSide(Enum):
+class TkSide(str, Enum):
     """side"""
 
     LEFT = "left"
@@ -89,7 +89,7 @@ class TkSide(Enum):
 
 
 @unique
-class TkRelief(Enum):
+class TkRelief(str, Enum):
     """relief"""
 
     RAISED = "raised"
@@ -100,14 +100,14 @@ class TkRelief(Enum):
     SOLID = "solid"
 
 
-class TkOrientation(Enum):
+class TkOrientation(str, Enum):
     """orient"""
 
     HORIZONTAL = "horizontal"
     VERTICAL = "vertical"
 
 
-class TkStates(Enum):
+class TkStates(str, Enum):
     """Possible states with tkinter"""
 
     # Text widget and button states
@@ -118,7 +118,7 @@ class TkStates(Enum):
     HIDDEN = "hidden"
 
 
-class TkMode(Enum):
+class TkMode(str, Enum):
     """Mode"""
 
     DETERMINATE = "determinate"
