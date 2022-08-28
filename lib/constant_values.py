@@ -24,6 +24,26 @@ class GradePlayer(Enum):
     ALIEN = "ERROR ERROR ERROR GERMAN TENSE DOES NOT RECOGNISE YOU ! PLEASE UPGRADE YOURSELF IF YOU WANT HIS RECOGNITION !"
 
 
+class TkErrors(Exception):
+    """Raised for any Tkinter error"""
+
+    def __init__(
+        self, msg: str = "An error occured when using tkinter package"
+    ) -> None:
+        """Print error message
+        :param msg: Error message to print"""
+        super().__init__(msg)
+
+
+class PackErrors(TkErrors):
+    """Raised for any Tkinter error during pack method usage"""
+
+    def __init__(self, msg: str = "pack input values are incorrects") -> None:
+        """Print pack error message
+        :param msg: Error message to print"""
+        super().__init__(msg)
+
+
 class TkBooleans(Enum):
     """Symbolic constants for Tk"""
 
@@ -59,7 +79,7 @@ class TkFilling(Enum):
 
 
 @unique
-class TKSide(Enum):
+class TkSide(Enum):
     """side"""
 
     LEFT = "left"
@@ -69,7 +89,7 @@ class TKSide(Enum):
 
 
 @unique
-class TKRelief(Enum):
+class TkRelief(Enum):
     """relief"""
 
     RAISED = "raised"
@@ -85,3 +105,21 @@ class TkOrientation(Enum):
 
     HORIZONTAL = "horizontal"
     VERTICAL = "vertical"
+
+
+class TkStates(Enum):
+    """Possible states with tkinter"""
+
+    # Text widget and button states
+    NORMAL = "normal"
+    DISABLED = "disabled"
+    ACTIVE = "active"
+    # Canvas state
+    HIDDEN = "hidden"
+
+
+class TkMode(Enum):
+    """Mode"""
+
+    DETERMINATE = "determinate"
+    INDETERMINATE = "indeterminate"
