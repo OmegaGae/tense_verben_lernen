@@ -496,16 +496,15 @@ class GamePageTemplate(ttk.Frame):
         self.preterite_entried = tk.StringVar()
 
         self.frames = []
-        self.nber_frames = 8
+        self.nber_frames = 7
         self.config_frames = {
             0: {"fill": tk.X, "side": tk.TOP, "pady": 10},
             1: {"fill": tk.X, "side": None, "pady": 40},
             2: {"fill": tk.X, "side": None, "pady": None},
             3: {"fill": tk.X, "side": None, "pady": 15},
-            4: {"fill": tk.X, "side": None, "pady": None},
+            4: {"fill": tk.X, "side": tk.BOTTOM, "pady": 10},
             5: {"fill": tk.X, "side": tk.BOTTOM, "pady": 10},
-            6: {"fill": tk.X, "side": tk.BOTTOM, "pady": 10},
-            7: {"fill": tk.X, "side": tk.BOTTOM, "pady": 75},
+            6: {"fill": tk.X, "side": tk.BOTTOM, "pady": 75},
         }
 
     def template_launcher(self):
@@ -529,14 +528,14 @@ class GamePageTemplate(ttk.Frame):
         self.label_infinitive = create_label(
             self.frames[1],
             text=infinitive_text,
-            tk_width=40,
+            tk_width=30,
             tk_anchor=tk.E,
             side=tk.LEFT,
             padx=10,
         )
 
         self.text_infinitive = create_text(
-            self.frames[1], text="infinitive verb", tk_width=30, side=tk.RIGHT, padx=10
+            self.frames[1], text="infinitive verb", tk_width=35, side=tk.LEFT, padx=10
         )
         self.text_infinitive.focus_get()
 
@@ -573,7 +572,7 @@ class GamePageTemplate(ttk.Frame):
             self.frames[3],
             tk_textvariable=self.preterite_entried,
             tk_width=35,
-            side=tk.CENTER,
+            side=tk.RIGHT,
             padx=10,
             ipadx=5,
         )
@@ -583,15 +582,16 @@ class GamePageTemplate(ttk.Frame):
             self.frames[4], fill=tk.X, padx=10, pady=5
         )
         self.label_remain_verbs = create_label(
-            self.frames[6],
+            self.frames[5],
             text=remain_verbs_text,
             tk_width=35,
+            tk_anchor=TkAnchorNSticky.W,
             side=tk.LEFT,
-            padx=10,
+            padx=25,
             ipadx=5,
         )
         self.submit_button = create_button(
-            self.frames[7], text=submit_text, anchor=tk.CENTER
+            self.frames[6], text=submit_text, anchor=tk.CENTER
         )
 
 
