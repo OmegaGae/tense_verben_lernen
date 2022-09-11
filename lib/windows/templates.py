@@ -3,6 +3,7 @@
 
 import sys
 from pathlib import Path
+from textwrap import fill
 from typing import Optional, Union, List
 
 path_test = Path(__file__).resolve().parents[2]
@@ -10,18 +11,7 @@ sys.path.append(str(path_test))
 
 import tkinter as tk
 from tkinter import ttk
-from lib.edit.game_text import (
-    presentation_text,
-    start_text,
-    game_title,
-    infinitive_text,
-    imperfect_tense_text,
-    preterite_tense_text,
-    remain_verbs_text,
-    submit_text,
-    success_text,
-    failed_text,
-)
+from lib.edit.game_text import *
 from lib.constant_values import (
     PackErrors,
     TkMode,
@@ -30,11 +20,11 @@ from lib.constant_values import (
     TkAnchorNSticky,
     TkSide,
     TkStates,
+    GradePlayer,
 )
 
 from tkinter.scrolledtext import ScrolledText
 from lib.img import PATH_TO_POSITIVE_SMILEY, PATH_TO_SAD_SMILEY, PATH_TO_THUM_UP_SMILEY
-
 
 from PIL import ImageTk, Image
 
@@ -248,7 +238,7 @@ def create_photo_label(
 def create_text(
     frame: ttk.Frame,
     text: str,
-    tk_width: int,
+    tk_width: int = 30,
     tk_height: int = 1,
     tk_state: Union[TkStates, str] = TkStates.DISABLED,
     **pack_options,
@@ -257,7 +247,7 @@ def create_text(
 
     :param frame: Parent frame
     :param text: Text to insert into tkinter text widget
-    :param tk_width: Width of the text widget
+    :param tk_width: Width of the text widget. Default set to 30
     :param tk_height: Height of the text widget. Default set to 1
     :param tk_state: State of tkinter widget text. Default state set to disabled.
     Disabled for read only, Normal for edit mode.
@@ -282,8 +272,8 @@ def create_text(
             f"Your Input type:{type(tk_state)}, is different from expected input type"
         )
 
-    tk_text = tk.Text(frame, height=tk_height, width=tk_width, state=tk_state)
-    tk_text.insert(tk.END, text)
+    tk_text = tk.Text(frame, height=tk_height, width=tk_width)
+    tk_text.insert(tk.END, text)  # line.column == 1.0
     try:
         tk_text.pack(
             fill=pack_options.get("fill"),
@@ -293,9 +283,12 @@ def create_text(
             ipadx=pack_options.get("ipadx"),
             ipady=pack_options.get("ipady"),
             anchor=pack_options.get("anchor"),
+            expand=pack_options.get("expand"),
         )
     except:  # to test
         raise PackErrors
+
+    tk_text.configure(state=tk_state)
 
     return tk_text
 
@@ -595,12 +588,16 @@ class GamePageTemplate(ttk.Frame):
             text=infinitive_text,
             tk_width=30,
             tk_anchor=tk.E,
-            side=tk.LEFT,
+            side=TkSide.LEFT,
             padx=10,
         )
 
         self.text_infinitive = create_text(
-            self.frames[1], text="infinitive verb", tk_width=35, side=tk.LEFT, padx=10
+            self.frames[1],
+            text="infinitive verb",
+            tk_width=30,
+            side=TkSide.LEFT,
+            padx=10,
         )
         self.text_infinitive.focus_get()
 
@@ -609,7 +606,7 @@ class GamePageTemplate(ttk.Frame):
             text=imperfect_tense_text,
             tk_width=35,
             tk_anchor=tk.CENTER,
-            side=tk.LEFT,
+            side=TkSide.LEFT,
             padx=10,
             ipadx=5,
         )
@@ -627,7 +624,7 @@ class GamePageTemplate(ttk.Frame):
             self.frames[3],
             tk_textvariable=self.imperfect_entried,
             tk_width=35,
-            side=tk.LEFT,
+            side=TkSide.LEFT,
             padx=10,
             ipadx=5,
         )
@@ -651,7 +648,7 @@ class GamePageTemplate(ttk.Frame):
             text=remain_verbs_text,
             tk_width=35,
             tk_anchor=TkAnchorNSticky.W,
-            side=tk.LEFT,
+            side=TkSide.LEFT,
             padx=25,
             ipadx=5,
         )
@@ -807,13 +804,119 @@ class GameSuccessTemplate(GameStateTemplate):
         :param text_to_display: Text to display alongside the image. Default set to success_text
         """
 
-        super().__init__(parent, img_path, resize_values, type_resize, failed_text)
+        super().__init__(parent, img_path, resize_values, type_resize, text_to_display)
 
 
-class GameConclusionTemplate:
+class GameConclusionTemplate(ttk.Frame):
     """
     Template for game conclusion
     """
+
+    def __init__(self, parent: tk.Tk):
+        """
+        Template game presentation.
+        Find here the presentation and the rules of the game
+        displayed as a scrowling text. After finishing reading,
+        you can go to the next page by clicking onto the next button.
+
+        :param parent: root widget type Tk
+        """
+        self.parent = parent
+
+        super().__init__(parent)
+        self.pack(fill=tk.BOTH, expand=True)
+
+        # define variable
+        self.imperfect_entried = tk.StringVar()
+        self.preterite_entried = tk.StringVar()
+
+        self.frames = []
+
+        self.config_frames = {
+            0: {"fill": tk.X, "side": tk.TOP, "pady": 10},
+            1: {"fill": tk.X, "pady": 40},
+            2: {"fill": tk.X},
+            3: {"fill": tk.X, "pady": 65},
+            4: {"fill": tk.X, "side": tk.BOTTOM, "pady": 10},
+        }
+        self._nber_frames = len(self.config_frames)
+
+    def template_launcher(self):
+        """Default function to call to call the template window"""
+
+        # create frames
+        for nber in range(self._nber_frames):
+            frame = create_frame(
+                self,
+                fill=self.config_frames[nber].get("fill"),
+                side=self.config_frames[nber].get("side"),
+                pady=self.config_frames[nber].get("pady"),
+            )
+            self.frames.append(frame)
+
+        # create widgets
+
+        self.label_end_game = create_label(
+            self.frames[0], text=end_text, tk_height=1, fill=tk.X, pady=5
+        )
+        self.label_final_score = create_label(
+            self.frames[1],
+            text=score_text,
+            tk_width=30,
+            tk_anchor=TkAnchorNSticky.E,
+            side=TkSide.LEFT,
+            padx=10,
+            ipadx=10,
+        )
+
+        self.text_final_score = create_text(
+            self.frames[1], text="10/20", tk_width=8, side=TkSide.LEFT, padx=20, ipadx=4
+        )
+
+        self.label_grade = create_label(
+            self.frames[2],
+            text=grade_text,
+            tk_width=30,
+            tk_anchor=TkAnchorNSticky.E,
+            side=TkSide.LEFT,
+            padx=10,
+            ipadx=10,
+        )
+
+        self.text_grade = create_text(
+            self.frames[2],
+            text=GradePlayer.OUTSIDER.name,
+            tk_width=12,
+            side=TkSide.LEFT,
+            tk_anchor=TkAnchorNSticky.CENTER,
+            padx=20,
+            ipadx=5,
+        )
+
+        self.grade_message = create_text(
+            self.frames[3],
+            text=GradePlayer.OUTSIDER,
+            fill=tk.BOTH,
+            tk_height=3,
+            tk_anchor=TkAnchorNSticky.W,
+            padx=10,
+        )
+
+        self.label_game_conclusion = create_label(
+            self.frames[4],
+            text=conclusion_text,
+            tk_anchor=TkAnchorNSticky.W,
+            side=TkSide.LEFT,
+            padx=25,
+            ipadx=5,
+        )
+        self.submit_button = create_button(
+            self.frames[4],
+            text=close_app_text,
+            side=TkSide.RIGHT,
+            anchor=TkAnchorNSticky.W,
+            padx=10,
+        )
 
 
 if __name__ == "__main__":
@@ -821,6 +924,6 @@ if __name__ == "__main__":
     root.title("VerbenLernen")
     root.geometry("550x500")
     root.resizable(0, 0)  # make sure full screen is not availabe
-    pr = GameFailedTemplate(root)
+    pr = GameConclusionTemplate(root)
     pr.template_launcher()
     root.mainloop()
