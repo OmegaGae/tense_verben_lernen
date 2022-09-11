@@ -39,23 +39,6 @@ from lib.img import PATH_TO_POSITIVE_SMILEY, PATH_TO_SAD_SMILEY, PATH_TO_THUM_UP
 from PIL import ImageTk, Image
 
 
-class DisplayTextFrame:
-
-    ...
-
-
-class ButtonsFrame:
-    ...
-
-
-class InputFrame:
-    ...
-
-
-class PictureFrame:
-    ...
-
-
 def check_input(value_to_check: Union[tuple, List[tuple]]) -> Union[Exception, None]:
     """Check if inputs have the right instance type
 
@@ -791,7 +774,8 @@ class GameFailedTemplate(GameStateTemplate):
         :param img_path: Path to image. Default set to PATH_TO_SAD_SMILEY
         :param resize_values: Reshape image size as (x,y). Default set to (400,350)
         :param type_resize: See Image.Resampling. Default set to Resampling.LANCZOS
-        :param text_to_display: Text to display alongside the image. Default set to failed_text
+        :param text_to_display: Text to display alongside the image.
+        Default set to failed_text
         """
 
         super().__init__(parent, img_path, resize_values, type_resize, failed_text)
