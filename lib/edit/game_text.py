@@ -39,3 +39,6 @@ remain_verbs_text = "Remain verbs:"
 infinitive_text = "Infinitive verb:"
 imperfect_tense_text = "Imperfect tense:"
 preterite_tense_text = "Preterite tense:"
+
+success_text = "Right Answer ! \n" + "Bravo !"
+failed_text = "Wrong Answer ! \n" + "My Bad !"
