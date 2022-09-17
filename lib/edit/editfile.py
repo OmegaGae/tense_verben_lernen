@@ -13,6 +13,11 @@ ERRORS_EDITFILE = {
 
 
 class Editfile:
+    """Basic class to read and add verbs in the specific filename
+
+    method read_txt: to read the specific filename
+    method add_txt_in_file: to add a line in the specific filename"""
+    
     def __init__(self, filename: str):
         """
         To read and write file with .txt extension
@@ -21,11 +26,12 @@ class Editfile:
         """
 
         self.filename = filename
-        print(self.filename)
-        self.data_dir = os.path.join(os.path.dirname(__file__), "edit")
-        self.data_path = os.path.join(self.data_dir, filename)
+        #print(self.filename)
+        self.data_path = os.path.join(os.path.dirname(__file__), self.filename)
 
-    def readtxt(self):
+        self._textfile = []
+
+    def read_txt(self):
         """
         Only txt extension are readable by this function.
         It will use the filename given during object creation.
@@ -33,8 +39,8 @@ class Editfile:
 
         if self.filename.split(".")[1] == "txt":
             with open(self.data_path, "r") as txt_file:
-                self.textfile = txt_file.readlines()
-            return self.textfile
+                self._textfile = txt_file.readlines()
+            return self._textfile
 
     @classmethod
     def __find_infinitive_verbs(cls, tense_verbs: list) -> List:
@@ -60,7 +66,7 @@ class Editfile:
 
         :param tense_verbs: list of all tense verbs
         :param data_to_check: list of data to check, data should respect tense verben format:
-            - Waiting format: 
+            - Waiting format:
                 [
                     "infinitive verb",
                     "conjugate verb to 3rd singular form",
@@ -103,13 +109,13 @@ class Editfile:
 
         return 0
 
-    def writetxt(self, data_to_write: list) -> None:
+    def add_txt_in_file(self, data_to_write: list) -> None:
         """
         Only txt extension are writable by this function.
         It will use the filename given during object creation.
 
         :param data_to_write: Data you want to write in the txt file. Language data must be german.
-            - Waiting format: 
+            - Waiting format:
                 [
                     "infinitive verb",
                     "conjugate verb to 3rd singular form",
@@ -119,10 +125,14 @@ class Editfile:
                 ]
             - example: ["fahren","Fährt", "Fuhr","ist gefahren", "A2"]
         """
-        lecture_txt = self.readtxt()
+        if not self._textfile:
+            self._textfile = self.read_txt()
+
         Editfile.__check_data_format(
-            lecture_txt, data_to_write
+            self._textfile, data_to_write
         )  # If nothing is raised, format is good, data can be written
+
+        # map:convert each element from list, to str -> list object
         str_data_to_write = "\n" + " ".join(list(map(str, data_to_write)))
 
         if self.filename.split(".")[1] == "txt":
@@ -132,4 +142,5 @@ class Editfile:
 
 if __name__ == "__main__":
     input_vb = Editfile("starke_unregelmäßie.txt")
-    input_vb.writetxt(["erinnern", "erinnert", "erinnerte", "hat erinnert", "A2"])
+    text = input_vb.read_txt()
+    input_vb.add_txt_in_file(["erinnern", "erinnert", "erinnerte", "hat erinnert", "A2"])
