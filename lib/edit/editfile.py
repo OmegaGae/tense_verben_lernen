@@ -17,7 +17,7 @@ class Editfile:
 
     method read_txt: to read the specific filename
     method add_txt_in_file: to add a line in the specific filename"""
-    
+
     def __init__(self, filename: str):
         """
         To read and write file with .txt extension
@@ -26,7 +26,7 @@ class Editfile:
         """
 
         self.filename = filename
-        #print(self.filename)
+        # print(self.filename)
         self.data_path = os.path.join(os.path.dirname(__file__), self.filename)
 
         self._textfile = []
@@ -143,4 +143,5 @@ class Editfile:
 if __name__ == "__main__":
     input_vb = Editfile("starke_unregelmäßie.txt")
     text = input_vb.read_txt()
-    input_vb.add_txt_in_file(["erinnern", "erinnert", "erinnerte", "hat erinnert", "A2"])
+    # input_vb.add_txt_in_file(["erinnern", "erinnert", "erinnerte", "hat erinnert", "A2"])
+    # print(text)

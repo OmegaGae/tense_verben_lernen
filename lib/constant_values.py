@@ -2,6 +2,7 @@
 Find here all Enum values for Verben Lernen application
 
 """
+
 from enum import Enum, IntEnum, unique
 
 
@@ -22,6 +23,19 @@ class GradePlayer(str, Enum):
     DISCIPLE = "GERMAN TENSE HAS RECOGNISED YOUR POTENTIAL ! A LONG ROAD IS WATING FOR YOU TO REACH THE PERFECTION !"
     OUTSIDER = "GERMAN TENSE HAS RECOGNISED YOU AS A POTENTIAL TALENT ! A LONG ROAD IS WATING FOR YOU TO REACH THE PERFECTION !"
     ALIEN = "ERROR ERROR ERROR GERMAN TENSE DOES NOT RECOGNISE YOU ! PLEASE UPGRADE YOURSELF IF YOU WANT HIS RECOGNITION !"
+
+
+@unique
+class TenseKey(str, Enum):
+    """
+    Get the key for tense verbs
+    """
+
+    INFINITIVE = "infinitive"
+    THIRD_FORM = "verb singular third form"
+    PRETERITE = "preterite"
+    PERFECT = "perfect"
+    LEVEL = "level"
 
 
 class TkErrors(Exception):
