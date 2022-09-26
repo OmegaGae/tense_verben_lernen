@@ -9,11 +9,20 @@
  """
 
 import random
+import tkinter as tk
 
 from typing import Dict, List
 from lib.edit.editfile import Editfile
 from lib.edit import STARKE_UNREGELMEASSIE
 from lib.constant_values import TenseKey
+from lib.windows import (
+    GamePresentationTemplate,
+    GamePageTemplate,
+    GameFailedTemplate,
+    GameSuccessTemplate,
+    GameConclusionTemplate,
+    check_input,
+)
 
 
 class HandlerTenseVerbs:
@@ -23,6 +32,8 @@ class HandlerTenseVerbs:
         """
         :param file_name: Name of the file to import
         :param max_game: Maximum game possible to play"""
+
+        check_input([(file_name, str), (max_game, int)])
 
         self.file_name = file_name
         self.max_game = max_game
@@ -76,17 +87,55 @@ class HandlerTenseVerbs:
         }
 
 
+class PlayerScore:
+    def __init__(self, score: int) -> None:
+        """:param score: player score"""
+        self._current_score = score
+
+    @property
+    def current_score(self):
+        return self._current_score
+
+    @property.setter
+    def current_score(self, score):
+        if not isinstance(score, int):
+            # add log warning -> wrong score type set
+            self._current_score = self._current_score
+        if score < 0 or score > 20:
+            # add log warning -> wrong range
+            self._current_score = self._current_score
+        self._current_score = score
+
+
 class VerbenLernenApp:
     """Game class."""
 
-    def __init__(self) -> None:
-        pass
+    def __init__(
+        self, file_name: str = STARKE_UNREGELMEASSIE, max_game: int = 20
+    ) -> None:
+
+        check_input([(file_name, str), (max_game, int)])
+        self._root = tk.Tk()
+        self._root.title("VerbenLernenApp")
+        self._root.geometry("550x500")
+        self._root.resizable(0, 0)  # make sure full screen is not availabe
+        self.file_name = file_name
+        self.max_game = max_game
+        self._reset()
 
     def start(self):
         pass
 
-    def reset(self):
-        pass
+    def _reset(self):
+        """Set object or attributes to their default state"""
+
+        self.presentation_page = GamePresentationTemplate(self._root)
+        self.game_pages = GamePageTemplate(self._root)
+        self.fail_page = GameFailedTemplate(self._root)
+        self.success_page = GameSuccessTemplate(self._root)
+        self.conclusion_page = GameConclusionTemplate(self._root)
+        self.verbs_handler = HandlerTenseVerbs(self.file_name, self.max_game)
+        self.player_score = PlayerScore(score=0)
 
 
 if __name__ == "__main__":

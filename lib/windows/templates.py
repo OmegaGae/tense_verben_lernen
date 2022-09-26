@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python3
 
+from cgitb import text
 import sys
 from pathlib import Path
 from typing import Optional, Union, List
@@ -458,21 +459,23 @@ def create_button(
 
 class GamePresentationTemplate(ttk.Frame):
     """
-    Template for game presentation
+    Template for game presentation.
+    Find here the presentation and the rules of the game
+    displayed as a scrowling text. After finishing reading,
+    you can go to the next page by clicking onto the next button.
     """
 
-    def __init__(self, parent, presentation_text):
+    def __init__(self, parent: tk.Tk, game_presentation: str = presentation_text):
         """
-        Template game presentation.
-        Find here the presentation and the rules of the game
-        displayed as a scrowling text. After finishing reading,
-        you can go to the next page by clicking onto the next button.
+        Init module for game presentation template class.
 
-        :param parent: root widget
-        :param presentation_text: game presentation
+        :param parent: Root widget
+        :param presentation_text: Game presentation. Default set to game_text.presentation_text
         """
+        check_input([(parent, tk.Tk), (game_presentation, str)])
+
         self.parent = parent
-        self.presentation_text = presentation_text
+        self.presentation_text = game_presentation
         super().__init__(parent)
 
         self.pack(fill=tk.X, expand=True)
@@ -531,18 +534,18 @@ class GamePresentationTemplate(ttk.Frame):
 
 class GamePageTemplate(ttk.Frame):
     """
-    Game template
+    Game page template.
+    Page as each game window is a game page. Go to the next game page
+    by clicking on the SUBMIT Button.
     """
 
     def __init__(self, parent: tk.Tk):
         """
-        Template game presentation.
-        Find here the presentation and the rules of the game
-        displayed as a scrowling text. After finishing reading,
-        you can go to the next page by clicking onto the next button.
+        Init module for game page template class.
 
         :param parent: root widget type Tk
         """
+        check_input((parent, tk.Tk))
         self.parent = parent
 
         super().__init__(parent)
@@ -670,10 +673,7 @@ class GameStateTemplate(ttk.Frame):
         text_to_display: str = success_text,
     ):
         """
-        Template game presentation.
-        Find here the presentation and the rules of the game
-        displayed as a scrowling text. After finishing reading,
-        you can go to the next page by clicking onto the next button.
+        Init module for game state template.
 
         :param parent: root widget type Tk
         :param img_path: Path to image. Default set to PATH_TO_POSITIVE_SMILEY
@@ -681,6 +681,17 @@ class GameStateTemplate(ttk.Frame):
         :param type_resize: See Image.Resampling. Default set to Resampling.LANCZOS
         :param text_to_display: Text to display alongside the image. Default set to success_text
         """
+
+        check_input(
+            [
+                (parent, tk.Tk),
+                (img_path, str),
+                (resize_values, tuple),
+                (type_resize, Image.Resampling),
+                (text_to_display, str),
+            ]
+        )
+
         self.parent = parent
 
         super().__init__(parent)
@@ -749,7 +760,7 @@ class GameStateTemplate(ttk.Frame):
 
 class GameFailedTemplate(GameStateTemplate):
     """
-    Template for failed response
+    Template for failed response.
     """
 
     def __init__(
@@ -761,10 +772,7 @@ class GameFailedTemplate(GameStateTemplate):
         text_to_display: str = failed_text,
     ):
         """
-        Template game presentation.
-        Find here the presentation and the rules of the game
-        displayed as a scrowling text. After finishing reading,
-        you can go to the next page by clicking onto the next button.
+        Init module for game failed template.
 
         :param parent: root widget type Tk
         :param img_path: Path to image. Default set to PATH_TO_SAD_SMILEY
@@ -774,12 +782,12 @@ class GameFailedTemplate(GameStateTemplate):
         Default set to failed_text
         """
 
-        super().__init__(parent, img_path, resize_values, type_resize, failed_text)
+        super().__init__(parent, img_path, resize_values, type_resize, text_to_display)
 
 
 class GameSuccessTemplate(GameStateTemplate):
     """
-    Template for success response
+    Template for successful response
     """
 
     def __init__(
@@ -791,10 +799,7 @@ class GameSuccessTemplate(GameStateTemplate):
         text_to_display: str = success_text,
     ):
         """
-        Template game presentation.
-        Find here the presentation and the rules of the game
-        displayed as a scrowling text. After finishing reading,
-        you can go to the next page by clicking onto the next button.
+        Init module for game success template.
 
         :param parent: root widget type Tk
         :param img_path: Path to image. Default set to PATH_TO_SAD_SMILEY
@@ -808,18 +813,16 @@ class GameSuccessTemplate(GameStateTemplate):
 
 class GameConclusionTemplate(ttk.Frame):
     """
-    Template for game conclusion
+    Template for game conclusion.
     """
 
     def __init__(self, parent: tk.Tk):
         """
-        Template game presentation.
-        Find here the presentation and the rules of the game
-        displayed as a scrowling text. After finishing reading,
-        you can go to the next page by clicking onto the next button.
+        Init module for game conclusion template.
 
         :param parent: root widget type Tk
         """
+        check_input((parent, tk.Tk))
         self.parent = parent
 
         super().__init__(parent)
