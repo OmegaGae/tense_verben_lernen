@@ -75,15 +75,15 @@ class HandlerTenseVerbs:
             return dict()  # empty dict
 
         _tense_verb = self._not_used_verbs.pop()
-        split_tense_verb = _tense_verb.split()
+        _split_tense_verb = _tense_verb.split()
         self._used_verbs.append(_tense_verb)
 
         return {
-            TenseKey.INFINITIVE: split_tense_verb[0],
-            TenseKey.THIRD_FORM: split_tense_verb[1],
-            TenseKey.PRETERITE: split_tense_verb[2],
-            TenseKey.PERFECT: split_tense_verb[3] + " " + split_tense_verb[4],
-            TenseKey.LEVEL: split_tense_verb[5],
+            TenseKey.INFINITIVE: _split_tense_verb[0],
+            TenseKey.THIRD_FORM: _split_tense_verb[1],
+            TenseKey.PRETERITE: _split_tense_verb[2],
+            TenseKey.PERFECT: _split_tense_verb[3] + " " + _split_tense_verb[4],
+            TenseKey.LEVEL: _split_tense_verb[5],
         }
 
 
