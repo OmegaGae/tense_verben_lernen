@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python3
 
-from cgitb import text
+
 import sys
 from pathlib import Path
-from typing import Optional, Union, List
+from typing import Any, Optional, Union, List, Callable
 
 path_test = Path(__file__).resolve().parents[2]
 sys.path.append(str(path_test))
@@ -414,14 +414,15 @@ def create_progress_bar(
 def create_button(
     frame: ttk.Frame,
     text: str,
-    callable_function=None,
+    callable_function: Optional[Callable] = None,
     **pack_options,
 ) -> ttk.Button:
     """Create a tkinter button that will be contained in an already existing parent frame
 
     :param frame: Parent frame
     :param text: Text to insert into tkinter Button widget
-    :param callable_function: Function to call when clicking on the button
+    :param callable_function: Function to call when clicking on the button.
+    Default value set to None
     :param pack_options: Configuration options to pack the created button.
     Only pack options are expected.
 
@@ -465,11 +466,14 @@ class GamePresentationTemplate(ttk.Frame):
     you can go to the next page by clicking onto the next button.
     """
 
-    def __init__(self, parent: tk.Tk, game_presentation: str = presentation_text):
+    def __init__(
+        self, parent: tk.Tk, func: Callable, game_presentation: str = presentation_text
+    ):
         """
         Init module for game presentation template class.
 
         :param parent: Root widget
+        :param func: Callable function
         :param presentation_text: Game presentation. Default set to game_text.presentation_text
         """
         check_input([(parent, tk.Tk), (game_presentation, str)])
@@ -479,6 +483,8 @@ class GamePresentationTemplate(ttk.Frame):
         super().__init__(parent)
 
         self.pack(fill=tk.X, expand=True)
+
+        self.callable_func = func
 
         self.frames = []
         self.config_frames = {
@@ -500,7 +506,7 @@ class GamePresentationTemplate(ttk.Frame):
             self.frames.append(frame)
 
         self.scrowling_text(self.frames[0])
-        self.start_button(self.frames[1])
+        self.start_button(self.frames[1], self.callable_func)
 
     def scrowling_text(
         self,
@@ -521,13 +527,14 @@ class GamePresentationTemplate(ttk.Frame):
         scrowling_text.pack(fill=tk.BOTH, side=tk.TOP, expand=True, padx=5)
         scrowling_text.configure(state=tk.DISABLED)
 
-    def start_button(self, frame: ttk.Frame):
+    def start_button(self, frame: ttk.Frame, func: Callable):
         """
         create a start button for the frame
 
         :param frame: Parent frame
-        """
-        start_button = ttk.Button(frame, text=start_text, command=frame.quit)
+        :param func: Callable function"""
+
+        start_button = ttk.Button(frame, text=start_text, command=func)
         start_button.pack(side=tk.BOTTOM, ipadx=5, ipady=5)
         start_button.focus_get()
 
@@ -539,11 +546,12 @@ class GamePageTemplate(ttk.Frame):
     by clicking on the SUBMIT Button.
     """
 
-    def __init__(self, parent: tk.Tk):
+    def __init__(self, parent: tk.Tk, func: Callable):
         """
         Init module for game page template class.
 
         :param parent: root widget type Tk
+        :param func: Callable funtion
         """
         check_input((parent, tk.Tk))
         self.parent = parent
@@ -551,7 +559,9 @@ class GamePageTemplate(ttk.Frame):
         super().__init__(parent)
         self.pack(fill=tk.BOTH, expand=True)
 
-        # define variable
+        self.callable_func = func
+
+        # user input
         self.imperfect_entried = tk.StringVar()
         self.preterite_entried = tk.StringVar()
 
@@ -567,8 +577,11 @@ class GamePageTemplate(ttk.Frame):
             6: {"fill": tk.X, "side": tk.BOTTOM, "pady": 75},
         }
 
-    def template_launcher(self):
-        """Default function to call to call the template window"""
+    def template_launcher(self, infinitive_verb: str, left_verb_nb: int, score: int):
+        """Default function to call to call the template window
+        :param infinitive_verb: Infinitive verb
+        :param left_verb_nb: Number of left verb to find
+        :param score: current score"""
 
         # create frames
         for nber in range(self._nber_frames):
@@ -580,6 +593,8 @@ class GamePageTemplate(ttk.Frame):
             )
             self.frames.append(frame)
 
+        left_verbs = remain_verbs_text + " " + str(left_verb_nb)
+        current_score = score  # !!! add frame to display this information !!!
         # create widgets
 
         self.label_game = create_label(
@@ -596,7 +611,7 @@ class GamePageTemplate(ttk.Frame):
 
         self.text_infinitive = create_text(
             self.frames[1],
-            text="infinitive verb",
+            text=infinitive_verb,
             tk_width=30,
             side=TkSide.LEFT,
             padx=10,
@@ -647,7 +662,7 @@ class GamePageTemplate(ttk.Frame):
         )
         self.label_remain_verbs = create_label(
             self.frames[5],
-            text=remain_verbs_text,
+            text=left_verbs,
             tk_width=35,
             tk_anchor=TkAnchorNSticky.W,
             side=TkSide.LEFT,
@@ -655,7 +670,10 @@ class GamePageTemplate(ttk.Frame):
             ipadx=5,
         )
         self.submit_button = create_button(
-            self.frames[6], text=submit_text, anchor=tk.CENTER
+            self.frames[6],
+            text=submit_text,
+            anchor=tk.CENTER,
+            callable_function=self.callable_func,
         )
 
 
@@ -667,6 +685,7 @@ class GameStateTemplate(ttk.Frame):
     def __init__(
         self,
         parent: tk.Tk,
+        func: Callable,
         img_path: str = PATH_TO_THUM_UP_SMILEY,
         resize_values: tuple = (400, 350),
         type_resize: Image.Resampling = Image.Resampling.LANCZOS,
@@ -676,6 +695,7 @@ class GameStateTemplate(ttk.Frame):
         Init module for game state template.
 
         :param parent: root widget type Tk
+        :param func: Callable function
         :param img_path: Path to image. Default set to PATH_TO_POSITIVE_SMILEY
         :param resize_values: Reshape image size as (x,y). Default set to (400,350)
         :param type_resize: See Image.Resampling. Default set to Resampling.LANCZOS
@@ -696,6 +716,8 @@ class GameStateTemplate(ttk.Frame):
 
         super().__init__(parent)
         self.pack(fill=tk.BOTH, expand=True)
+
+        self.callable_func = func
 
         # prepare image to display
         path_to_file = Path(img_path).resolve()
@@ -754,7 +776,10 @@ class GameStateTemplate(ttk.Frame):
         )
 
         self.submit_button = create_button(
-            self.frames[1], text=submit_text, anchor=tk.NE
+            self.frames[1],
+            text=submit_text,
+            anchor=tk.NE,
+            callable_function=self.callable_func,
         )
 
 
@@ -766,6 +791,7 @@ class GameFailedTemplate(GameStateTemplate):
     def __init__(
         self,
         parent: tk.Tk,
+        func: Callable,
         img_path: str = PATH_TO_SAD_SMILEY,
         resize_values: tuple = (400, 350),
         type_resize: Image.Resampling = Image.Resampling.LANCZOS,
@@ -775,6 +801,7 @@ class GameFailedTemplate(GameStateTemplate):
         Init module for game failed template.
 
         :param parent: root widget type Tk
+        :param func: Callable function
         :param img_path: Path to image. Default set to PATH_TO_SAD_SMILEY
         :param resize_values: Reshape image size as (x,y). Default set to (400,350)
         :param type_resize: See Image.Resampling. Default set to Resampling.LANCZOS
@@ -782,7 +809,9 @@ class GameFailedTemplate(GameStateTemplate):
         Default set to failed_text
         """
 
-        super().__init__(parent, img_path, resize_values, type_resize, text_to_display)
+        super().__init__(
+            parent, func, img_path, resize_values, type_resize, text_to_display
+        )
 
 
 class GameSuccessTemplate(GameStateTemplate):
@@ -793,6 +822,7 @@ class GameSuccessTemplate(GameStateTemplate):
     def __init__(
         self,
         parent: tk.Tk,
+        func: Callable,
         img_path: str = PATH_TO_POSITIVE_SMILEY,
         resize_values: tuple = (400, 350),
         type_resize: Image.Resampling = Image.Resampling.LANCZOS,
@@ -802,13 +832,16 @@ class GameSuccessTemplate(GameStateTemplate):
         Init module for game success template.
 
         :param parent: root widget type Tk
+        :param func: Callable function
         :param img_path: Path to image. Default set to PATH_TO_SAD_SMILEY
         :param resize_values: Reshape image size as (x,y). Default set to (400,350)
         :param type_resize: See Image.Resampling. Default set to Resampling.LANCZOS
         :param text_to_display: Text to display alongside the image. Default set to success_text
         """
 
-        super().__init__(parent, img_path, resize_values, type_resize, text_to_display)
+        super().__init__(
+            parent, func, img_path, resize_values, type_resize, text_to_display
+        )
 
 
 class GameConclusionTemplate(ttk.Frame):
@@ -816,11 +849,12 @@ class GameConclusionTemplate(ttk.Frame):
     Template for game conclusion.
     """
 
-    def __init__(self, parent: tk.Tk):
+    def __init__(self, parent: tk.Tk, func: Callable):
         """
         Init module for game conclusion template.
 
         :param parent: root widget type Tk
+        :param func: Callable function
         """
         check_input((parent, tk.Tk))
         self.parent = parent
@@ -828,10 +862,7 @@ class GameConclusionTemplate(ttk.Frame):
         super().__init__(parent)
         self.pack(fill=tk.BOTH, expand=True)
 
-        # define variable
-        self.imperfect_entried = tk.StringVar()
-        self.preterite_entried = tk.StringVar()
-
+        self.callable_func = func
         self.frames = []
 
         self.config_frames = {
@@ -843,8 +874,11 @@ class GameConclusionTemplate(ttk.Frame):
         }
         self._nber_frames = len(self.config_frames)
 
-    def template_launcher(self):
-        """Default function to call to call the template window"""
+    def template_launcher(self, score: int):
+        """Default function to call to call the template window
+        :param score: player score"""
+
+        _score = str(score) + "/20"
 
         # create frames
         for nber in range(self._nber_frames):
@@ -872,7 +906,7 @@ class GameConclusionTemplate(ttk.Frame):
         )
 
         self.text_final_score = create_text(
-            self.frames[1], text="10/20", tk_width=8, side=TkSide.LEFT, padx=20, ipadx=4
+            self.frames[1], text=_score, tk_width=8, side=TkSide.LEFT, padx=20, ipadx=4
         )
 
         self.label_grade = create_label(
@@ -918,6 +952,7 @@ class GameConclusionTemplate(ttk.Frame):
             side=TkSide.RIGHT,
             anchor=TkAnchorNSticky.W,
             padx=10,
+            callable_function=self.callable_func,
         )
 
 
