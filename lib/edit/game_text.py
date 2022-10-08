@@ -34,9 +34,9 @@ end_text = "END OF THE GAME"
 next_text = "NEXT"
 submit_text = "SUBMIT"
 close_app_text = "CLOSE GAME"
-score_text = "Your current score:"
-grade_text = "Your current grade:"
-remain_verbs_text = "Remain verbs:"
+score_text = "Your current score: "
+grade_text = "Your current grade: "
+remain_verbs_text = "Remain verbs: "
 conclusion_text = "See you next time for another VERBENLERNEN ! "
 
 

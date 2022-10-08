@@ -29,6 +29,40 @@ from lib.img import PATH_TO_POSITIVE_SMILEY, PATH_TO_SAD_SMILEY, PATH_TO_THUM_UP
 from PIL import ImageTk, Image
 
 
+def get_player_grade(score: int) -> GradePlayer:
+    """
+    Get the grade according to the score
+        :e.g:
+            CREATOR:20,
+            MASTER:>20-18>=,
+            EXPERT:>18-16>=,
+            ELITE:>16-14>=,
+            DISCIPLE:>14-10>=,
+            OUTSIDER:>10-5>=,
+            ALIEN:>5-0>="""
+
+    if score == 0 or (score > 0 and score < 5):
+        return GradePlayer.ALIEN
+
+    elif score == 5 or (score > 5 and score < 10):
+        return GradePlayer.OUTSIDER
+
+    elif score == 10 or (score > 10 and score < 14):
+        return GradePlayer.DISCIPLE
+
+    elif score == 14 or (score > 14 and score < 16):
+        return GradePlayer.ELITE
+
+    elif score == 16 or (score > 16 and score < 18):
+        return GradePlayer.EXPERT
+
+    elif score == 18 or (score > 18 and score < 20):
+        return GradePlayer.MASTER
+
+    else:
+        return GradePlayer.CREATOR
+
+
 def check_input(value_to_check: Union[tuple, List[tuple]]) -> Union[Exception, None]:
     """Check if inputs have the right instance type
 
@@ -566,7 +600,6 @@ class GamePageTemplate(ttk.Frame):
         self.preterite_entried = tk.StringVar()
 
         self.frames = []
-        self._nber_frames = 7
         self.config_frames = {
             0: {"fill": tk.X, "side": tk.TOP, "pady": 10},
             1: {"fill": tk.X, "side": None, "pady": 40},
@@ -576,6 +609,7 @@ class GamePageTemplate(ttk.Frame):
             5: {"fill": tk.X, "side": tk.BOTTOM, "pady": 10},
             6: {"fill": tk.X, "side": tk.BOTTOM, "pady": 75},
         }
+        self._nber_frames = len(self.config_frames)
 
     def template_launcher(self, infinitive_verb: str, left_verb_nb: int, score: int):
         """Default function to call to call the template window
@@ -593,8 +627,8 @@ class GamePageTemplate(ttk.Frame):
             )
             self.frames.append(frame)
 
-        left_verbs = remain_verbs_text + " " + str(left_verb_nb)
-        current_score = score  # !!! add frame to display this information !!!
+        left_verbs = remain_verbs_text + str(left_verb_nb)
+        current_score = score_text + str(score)
         # create widgets
 
         self.label_game = create_label(
@@ -663,12 +697,23 @@ class GamePageTemplate(ttk.Frame):
         self.label_remain_verbs = create_label(
             self.frames[5],
             text=left_verbs,
-            tk_width=35,
+            tk_width=25,
             tk_anchor=TkAnchorNSticky.W,
             side=TkSide.LEFT,
             padx=25,
             ipadx=5,
         )
+
+        self.label_remain_verbs = create_label(
+            self.frames[5],
+            text=current_score,
+            tk_width=25,
+            tk_anchor=TkAnchorNSticky.E,
+            side=TkSide.RIGHT,
+            padx=25,
+            ipadx=5,
+        )
+
         self.submit_button = create_button(
             self.frames[6],
             text=submit_text,
@@ -879,6 +924,8 @@ class GameConclusionTemplate(ttk.Frame):
         :param score: player score"""
 
         _score = str(score) + "/20"
+        # _end_score = score_text + _score # choice was to use label and text
+        # but only label can be used, if yes should use _end_score
 
         # create frames
         for nber in range(self._nber_frames):
@@ -921,7 +968,7 @@ class GameConclusionTemplate(ttk.Frame):
 
         self.text_grade = create_text(
             self.frames[2],
-            text=GradePlayer.OUTSIDER.name,
+            text=get_player_grade(score).name,
             tk_width=12,
             side=TkSide.LEFT,
             tk_anchor=TkAnchorNSticky.CENTER,
@@ -931,7 +978,7 @@ class GameConclusionTemplate(ttk.Frame):
 
         self.grade_message = create_text(
             self.frames[3],
-            text=GradePlayer.OUTSIDER,
+            text=get_player_grade(score),
             fill=tk.BOTH,
             tk_height=3,
             tk_anchor=TkAnchorNSticky.W,
@@ -961,6 +1008,6 @@ if __name__ == "__main__":
     root.title("VerbenLernen")
     root.geometry("550x500")
     root.resizable(0, 0)  # make sure full screen is not availabe
-    pr = GameConclusionTemplate(root)
-    pr.template_launcher()
+    pr = GameConclusionTemplate(root, root.quit())
+    pr.template_launcher(14)
     root.mainloop()
