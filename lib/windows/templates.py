@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
 #!/usr/bin/env python3
-
 
 import sys
 from pathlib import Path
-from typing import Any, Optional, Union, List, Callable
+from typing import Optional, Union, List, Callable
 
 path_test = Path(__file__).resolve().parents[2]
 sys.path.append(str(path_test))
@@ -74,19 +72,22 @@ def check_input(value_to_check: Union[tuple, List[tuple]]) -> Union[Exception, N
     if isinstance(value_to_check, tuple):
         if not isinstance(value_to_check[0], value_to_check[1]):
             raise TypeError(
-                f"Your Input type:{type(value_to_check[0])}, is different from expected input type"
+                f"Your Input has a type:{type(value_to_check[0])}, "
+                + f"which is different from expected input type: {value[1]}"
             )
 
     elif isinstance(value_to_check, list):
-        for value in value_to_check:  # value == tuple
+        for index, value in enumerate(value_to_check):  # value == tuple
             if not isinstance(value[0], value[1]):
                 raise TypeError(
-                    f"Your Input type:{type(value[0])}, is different from expected input type"
+                    f"Your Input in index: {index} has a type: {type(value[0])}, "
+                    + f"which is different from expected input type: {value[1]}"
                 )
 
     else:
         raise TypeError(
-            f" parameter value_to_check type:{type(value_to_check[0])}, is different from tuple or list"
+            f" parameter value_to_check type: {type(value_to_check[0])}, "
+            + "is different from tuple or list"
         )
 
     return
@@ -611,6 +612,11 @@ class GamePageTemplate(ttk.Frame):
         }
         self._nber_frames = len(self.config_frames)
 
+    def reset(self):
+        """Reset frame modules"""
+        self.entry_imperfect.delete(0, "end")
+        self.entry_preterite.delete(0, "end")
+
     def template_launcher(self, infinitive_verb: str, left_verb_nb: int, score: int):
         """Default function to call to call the template window
         :param infinitive_verb: Infinitive verb
@@ -1008,6 +1014,6 @@ if __name__ == "__main__":
     root.title("VerbenLernen")
     root.geometry("550x500")
     root.resizable(0, 0)  # make sure full screen is not availabe
-    pr = GameConclusionTemplate(root, root.quit())
-    pr.template_launcher(14)
+    pr = GamePresentationTemplate(root, root.quit())
+    pr.template_launcher()
     root.mainloop()

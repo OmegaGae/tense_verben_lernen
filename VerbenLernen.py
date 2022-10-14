@@ -96,7 +96,7 @@ class PlayerScore:
     def current_score(self):
         return self._current_score
 
-    @property.setter
+    @current_score.setter
     def current_score(self, score):
         if not isinstance(score, int):
             # add log warning -> wrong score type set
@@ -107,7 +107,7 @@ class PlayerScore:
         self._current_score = score
 
 
-class VerbenLernenApp:
+class VerbenLernenApp(tk.Tk):
     """Game class."""
 
     def __init__(
@@ -115,66 +115,91 @@ class VerbenLernenApp:
     ) -> None:
 
         check_input([(file_name, str), (max_game, int)])
-        self._root = tk.Tk()
-        self._root.title("VerbenLernenApp")
-        self._root.geometry("550x500")
-        self._root.resizable(0, 0)  # make sure full screen is not availabe
+
+        super().__init__()
+
+        self.title("VerbenLernenApp")
+        self.geometry("550x500")
+        self.resizable(0, 0)  # make sure full screen is not availabe
         self.file_name = file_name
         self.max_game = max_game
+        self.reset_trigger = False
         self._reset()
 
     def start(self):
-        """Launch the game"""
         self.presentation_page.template_launcher()
 
     def _reset(self):
         """Set object or attributes to their default state"""
-
+        self.reset_trigger = True
+        self.verbs_handler = HandlerTenseVerbs(self.file_name, self.max_game)
         self._verb_to_find = self.verbs_handler.select_verb()
 
-        self.verbs_handler = HandlerTenseVerbs(self.file_name, self.max_game)
         self.player_score = PlayerScore(score=0)
-        self.conclusion_page = GameConclusionTemplate(self._root, self._root.quit())
-        self.game_pages = GamePageTemplate(
-            self._root, self.choose_failed_or_success_page()
-        )
-        self.fail_page = GameFailedTemplate(
-            self._root, self.choose_game_or_conclusion_page()
-        )
+        self.conclusion_page = GameConclusionTemplate(self, self.quit)
+
+        self.game_pages = GamePageTemplate(self, self.choose_failed_or_success_page())
+        self.fail_page = GameFailedTemplate(self, self.choose_game_or_conclusion_page())
         self.success_page = GameSuccessTemplate(
-            self._root, self.choose_game_or_conclusion_page()
+            self, self.choose_game_or_conclusion_page()
         )
         self.presentation_page = GamePresentationTemplate(
-            self._root,
-            self.game_pages.template_launcher(self._verb_to_find),
+            self,
+            func=self.game_pages.template_launcher(
+                self._verb_to_find[TenseKey.INFINITIVE],
+                len(self.verbs_handler._not_used_verbs),
+                self.player_score.current_score,
+            ),
         )
+        self.reset_trigger = False
 
     def choose_failed_or_success_page(self):
         """Choose either to launch failure page or success page"""
+        # init: if reset trigger
+        if self.reset_trigger:
+            # do nothing if called from reset
+            return
+
         if self.validate_user_input():
             self.player_score.current_score = self.player_score.current_score + 1
+            self.success_page.tkraise()  # switch to success frame
             return self.success_page.template_launcher()
 
         self.player_score.current_score = self.player_score.current_score
+        self.fail_page.tkraise()  # switch to failed frame
         return self.fail_page.template_launcher()
 
     def choose_game_or_conclusion_page(self):
         """Choose either to go to game page or conclusion page"""
+
+        # init: if reset trigger
+        if self.reset_trigger:
+            # do nothing if call from reset
+            return
+
         self._verb_to_find = self.verbs_handler.select_verb()
 
         if len(self.verbs_handler._used_verbs) == self.max_game:
+            self.conclusion_page.tkraise()  # switch to conclusion frame
             return self.conclusion_page.template_launcher(
                 self.player_score.current_score
             )
 
+        self.game_pages.reset()
+        self.game_pages.tkraise()  # switch to game frame
         return self.game_pages.template_launcher(
-            self._verb_to_find,
+            self._verb_to_find[TenseKey.INFINITIVE],
             len(self.verbs_handler._not_used_verbs),
             self.player_score.current_score,
-        )  # missing frame for score
+        )
 
     def validate_user_input(self) -> bool:
         """Check user entries, and return True if all entries are correct"""
+
+        # init: if reset trigger
+        if self.reset_trigger:
+            # do nothing if called from reset
+            return
 
         if (
             self.game_pages.imperfect_entried == self._verb_to_find[TenseKey.PERFECT]
@@ -186,5 +211,6 @@ class VerbenLernenApp:
 
 
 if __name__ == "__main__":
-    verbs = HandlerTenseVerbs()
-    print(verbs.select_verb())
+    game_app = VerbenLernenApp()
+    game_app.start()
+    game_app.mainloop()
