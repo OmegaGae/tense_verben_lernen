@@ -502,7 +502,10 @@ class GamePresentationTemplate(ttk.Frame):
     """
 
     def __init__(
-        self, parent: tk.Tk, func: Callable, game_presentation: str = presentation_text
+        self,
+        parent: ttk.Frame,
+        func: Callable,
+        game_presentation: str = presentation_text,
     ):
         """
         Init module for game presentation template class.
@@ -511,13 +514,17 @@ class GamePresentationTemplate(ttk.Frame):
         :param func: Callable function
         :param presentation_text: Game presentation. Default set to game_text.presentation_text
         """
-        check_input([(parent, tk.Tk), (game_presentation, str)])
+        check_input([(parent, ttk.Frame), (game_presentation, str)])
 
         self.parent = parent
         self.presentation_text = game_presentation
         super().__init__(parent)
 
-        self.pack(fill=tk.X, expand=True)
+        self.pack(
+            side=TkSide.TOP,
+            fill=tk.BOTH,
+            expand=True,
+        )
 
         self.callable_func = func
 
@@ -528,21 +535,6 @@ class GamePresentationTemplate(ttk.Frame):
         }
         self._nber_frames = len(self.config_frames)
 
-    def template_launcher(self):
-        """Default function to call to call the template window"""
-        # create frames
-        for nber in range(self._nber_frames):
-            frame = create_frame(
-                self,
-                fill=self.config_frames[nber]["fill"],
-                side=self.config_frames[nber]["side"],
-                pady=self.config_frames[nber]["pady"],
-            )
-            self.frames.append(frame)
-
-        self.scrowling_text(self.frames[0])
-        self.start_button(self.frames[1], self.callable_func)
-
     def scrowling_text(
         self,
         frame: ttk.Frame,
@@ -550,7 +542,7 @@ class GamePresentationTemplate(ttk.Frame):
         height: Optional[int] = None,
     ):
         """
-        Print a text in a scrowling text box.
+        Display a text in a scrowling text box.
 
         :param frame: Parent frame
         :param width: (Optional) define the scrowling text box width. Default set to None
@@ -573,6 +565,21 @@ class GamePresentationTemplate(ttk.Frame):
         start_button.pack(side=tk.BOTTOM, ipadx=5, ipady=5)
         start_button.focus_get()
 
+    def template_launcher(self):
+        """Default function to call to call the template window"""
+        # create frames
+        for nber in range(self._nber_frames):
+            frame = create_frame(
+                self,
+                fill=self.config_frames[nber]["fill"],
+                side=self.config_frames[nber]["side"],
+                pady=self.config_frames[nber]["pady"],
+            )
+            self.frames.append(frame)
+
+        self.scrowling_text(self.frames[0])
+        self.start_button(self.frames[1], self.callable_func)
+
 
 class GamePageTemplate(ttk.Frame):
     """
@@ -581,18 +588,22 @@ class GamePageTemplate(ttk.Frame):
     by clicking on the SUBMIT Button.
     """
 
-    def __init__(self, parent: tk.Tk, func: Callable):
+    def __init__(self, parent: ttk.Frame, func: Callable):
         """
         Init module for game page template class.
 
         :param parent: root widget type Tk
         :param func: Callable funtion
         """
-        check_input((parent, tk.Tk))
+        check_input((parent, ttk.Frame))
         self.parent = parent
 
         super().__init__(parent)
-        self.pack(fill=tk.BOTH, expand=True)
+        self.pack(
+            side=TkSide.TOP,
+            fill=tk.BOTH,
+            expand=True,
+        )
 
         self.callable_func = func
 
@@ -735,7 +746,7 @@ class GameStateTemplate(ttk.Frame):
 
     def __init__(
         self,
-        parent: tk.Tk,
+        parent: ttk.Frame,
         func: Callable,
         img_path: str = PATH_TO_THUM_UP_SMILEY,
         resize_values: tuple = (400, 350),
@@ -755,7 +766,7 @@ class GameStateTemplate(ttk.Frame):
 
         check_input(
             [
-                (parent, tk.Tk),
+                (parent, ttk.Frame),
                 (img_path, str),
                 (resize_values, tuple),
                 (type_resize, Image.Resampling),
@@ -766,7 +777,11 @@ class GameStateTemplate(ttk.Frame):
         self.parent = parent
 
         super().__init__(parent)
-        self.pack(fill=tk.BOTH, expand=True)
+        self.pack(
+            side=TkSide.TOP,
+            fill=tk.BOTH,
+            expand=True,
+        )
 
         self.callable_func = func
 
@@ -841,7 +856,7 @@ class GameFailedTemplate(GameStateTemplate):
 
     def __init__(
         self,
-        parent: tk.Tk,
+        parent: ttk.Frame,
         func: Callable,
         img_path: str = PATH_TO_SAD_SMILEY,
         resize_values: tuple = (400, 350),
@@ -872,7 +887,7 @@ class GameSuccessTemplate(GameStateTemplate):
 
     def __init__(
         self,
-        parent: tk.Tk,
+        parent: ttk.Frame,
         func: Callable,
         img_path: str = PATH_TO_POSITIVE_SMILEY,
         resize_values: tuple = (400, 350),
@@ -900,18 +915,22 @@ class GameConclusionTemplate(ttk.Frame):
     Template for game conclusion.
     """
 
-    def __init__(self, parent: tk.Tk, func: Callable):
+    def __init__(self, parent: ttk.Frame, func: Callable):
         """
         Init module for game conclusion template.
 
         :param parent: root widget type Tk
         :param func: Callable function
         """
-        check_input((parent, tk.Tk))
+        check_input((parent, ttk.Frame))
         self.parent = parent
 
         super().__init__(parent)
-        self.pack(fill=tk.BOTH, expand=True)
+        self.pack(
+            side=TkSide.TOP,
+            fill=tk.BOTH,
+            expand=True,
+        )
 
         self.callable_func = func
         self.frames = []
@@ -984,7 +1003,7 @@ class GameConclusionTemplate(ttk.Frame):
 
         self.grade_message = create_text(
             self.frames[3],
-            text=get_player_grade(score),
+            text=get_player_grade(score).value,
             fill=tk.BOTH,
             tk_height=3,
             tk_anchor=TkAnchorNSticky.W,
@@ -1009,11 +1028,27 @@ class GameConclusionTemplate(ttk.Frame):
         )
 
 
+def change_frame():
+    global frame_root, pr
+    auc = GamePageTemplate(frame_root, frame_root.quit)
+    pr.destroy()
+    # auc.tkraise()
+    auc.template_launcher("richie", 15, 5)
+
+
 if __name__ == "__main__":
+    from lib.constant_values import TkFilling
+
+    # TO TEST PACKAGE
+
     root = tk.Tk()
     root.title("VerbenLernen")
     root.geometry("550x500")
-    root.resizable(0, 0)  # make sure full screen is not availabe
-    pr = GamePresentationTemplate(root, root.quit())
+    root.resizable(0, 0)
+    frame_root = ttk.Frame(root)
+    frame_root.pack(side=TkSide.TOP, fill=TkFilling.BOTH, expand=True)
+    pr = GamePresentationTemplate(
+        frame_root, change_frame
+    )  # when using buttom callable should be call without parenthesis
     pr.template_launcher()
     root.mainloop()

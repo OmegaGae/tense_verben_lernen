@@ -24,6 +24,14 @@ class GradePlayer(str, Enum):
     OUTSIDER = "GERMAN TENSE HAS RECOGNISED YOU AS A POTENTIAL TALENT ! A LONG ROAD IS WATING FOR YOU TO REACH THE PERFECTION !"
     ALIEN = "ERROR ERROR ERROR GERMAN TENSE DOES NOT RECOGNISE YOU ! PLEASE UPGRADE YOURSELF IF YOU WANT HIS RECOGNITION !"
 
+class VerbenLernenEnum(str, Enum):
+    """TO DO"""
+    END_PG = "conclusion_page"
+    GAME_PG = "game_pages", 
+    FAIL_PG = "fail_page", 
+    SUCCESS_PG = "success_page", 
+    START_PG = "presentation_page"
+
 
 @unique
 class TenseKey(str, Enum):

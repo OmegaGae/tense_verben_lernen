@@ -10,11 +10,20 @@
 
 import random
 import tkinter as tk
+from tkinter import ttk
+from enum import Enum
 
-from typing import Dict, List
+from typing import Dict, List, Any
 from lib.edit.editfile import Editfile
 from lib.edit import STARKE_UNREGELMEASSIE
-from lib.constant_values import TenseKey
+from lib.constant_values import (
+    TenseKey,
+    TkAnchorNSticky,
+    TkFilling,
+    TkRelief,
+    TkSide,
+    VerbenLernenEnum,
+)
 from lib.windows import (
     GamePresentationTemplate,
     GamePageTemplate,
@@ -113,93 +122,144 @@ class VerbenLernenApp(tk.Tk):
     def __init__(
         self, file_name: str = STARKE_UNREGELMEASSIE, max_game: int = 20
     ) -> None:
+        """TO DO"""
 
         check_input([(file_name, str), (max_game, int)])
 
-        super().__init__()
+        tk.Tk.__init__(self)
 
         self.title("VerbenLernenApp")
         self.geometry("550x500")
         self.resizable(0, 0)  # make sure full screen is not availabe
         self.file_name = file_name
         self.max_game = max_game
-        self.reset_trigger = False
+        self._current_frame = None
+        self._previous_frame_name = None
+        self._is_first_switch = True
+
+        self.frames_container = ttk.Frame(self)
+        self.frames_container.config(relief=TkRelief.GROOVE)
+        self.frames_container.pack(side=TkSide.TOP, fill=TkFilling.BOTH, expand=True)
+
         self._reset()
 
-    def start(self):
-        self.presentation_page.template_launcher()
+    def switch_frame(self, frame_class):
+        """TO DO"""
+        if self._current_frame is not None:
+            # TO DO: log which frame was destroyed
+            self._current_frame.destroy()
+            self.page_creator()
 
-    def _reset(self):
-        """Set object or attributes to their default state"""
-        self.reset_trigger = True
-        self.verbs_handler = HandlerTenseVerbs(self.file_name, self.max_game)
-        self._verb_to_find = self.verbs_handler.select_verb()
+        self._current_frame = frame_class
+        # TO DO : log current frame
+        if self._is_first_switch:
+            self._is_first_switch = False
+            self._previous_frame_name = VerbenLernenEnum.START_PG.value
+            self._current_frame.template_launcher()
 
-        self.player_score = PlayerScore(score=0)
-        self.conclusion_page = GameConclusionTemplate(self, self.quit)
-
-        self.game_pages = GamePageTemplate(self, self.choose_failed_or_success_page())
-        self.fail_page = GameFailedTemplate(self, self.choose_game_or_conclusion_page())
-        self.success_page = GameSuccessTemplate(
-            self, self.choose_game_or_conclusion_page()
-        )
-        self.presentation_page = GamePresentationTemplate(
-            self,
-            func=self.game_pages.template_launcher(
-                self._verb_to_find[TenseKey.INFINITIVE],
-                len(self.verbs_handler._not_used_verbs),
-                self.player_score.current_score,
-            ),
-        )
-        self.reset_trigger = False
-
-    def choose_failed_or_success_page(self):
-        """Choose either to launch failure page or success page"""
-        # init: if reset trigger
-        if self.reset_trigger:
-            # do nothing if called from reset
-            return
-
-        if self.validate_user_input():
-            self.player_score.current_score = self.player_score.current_score + 1
-            self.success_page.tkraise()  # switch to success frame
-            return self.success_page.template_launcher()
-
-        self.player_score.current_score = self.player_score.current_score
-        self.fail_page.tkraise()  # switch to failed frame
-        return self.fail_page.template_launcher()
-
-    def choose_game_or_conclusion_page(self):
-        """Choose either to go to game page or conclusion page"""
-
-        # init: if reset trigger
-        if self.reset_trigger:
-            # do nothing if call from reset
-            return
-
-        self._verb_to_find = self.verbs_handler.select_verb()
-
-        if len(self.verbs_handler._used_verbs) == self.max_game:
-            self.conclusion_page.tkraise()  # switch to conclusion frame
-            return self.conclusion_page.template_launcher(
-                self.player_score.current_score
-            )
-
-        self.game_pages.reset()
-        self.game_pages.tkraise()  # switch to game frame
-        return self.game_pages.template_launcher(
+    def switch_to_game_page(self):
+        """TO DO"""
+        self.switch_frame(self.game_pages)
+        self._previous_frame_name = VerbenLernenEnum.GAME_PG.value
+        self._current_frame.template_launcher(
             self._verb_to_find[TenseKey.INFINITIVE],
             len(self.verbs_handler._not_used_verbs),
             self.player_score.current_score,
         )
 
+    def page_creator(self):
+        """Create object to their default state.
+        Should be used after destroying a page"""
+
+        if self._previous_frame_name == VerbenLernenEnum.END_PG.value:
+            self.conclusion_page = GameConclusionTemplate(
+                self.frames_container, self.quit
+            )
+
+        elif self._previous_frame_name == VerbenLernenEnum.GAME_PG.value:
+            self.game_pages = GamePageTemplate(
+                self.frames_container, self.choose_failed_or_success_page
+            )
+
+        elif self._previous_frame_name == VerbenLernenEnum.FAIL_PG.value:
+            self.fail_page = GameFailedTemplate(
+                self.frames_container, self.choose_game_or_conclusion_page
+            )
+
+        elif self._previous_frame_name == VerbenLernenEnum.SUCCESS_PG.value:
+            self.success_page = GameSuccessTemplate(
+                self.frames_container, self.choose_game_or_conclusion_page
+            )
+
+        elif self._previous_frame_name == VerbenLernenEnum.START_PG.value:
+            self.presentation_page = GamePresentationTemplate(
+                self.frames_container,
+                func=self.switch_to_game_page,
+            )
+        else:
+            pass
+
+    def _reset(self):
+        """Set object or attributes to their default state"""
+
+        self.verbs_handler = HandlerTenseVerbs(self.file_name, self.max_game)
+        self._verb_to_find = self.verbs_handler.select_verb()
+
+        self.player_score = PlayerScore(score=0)
+
+        self.conclusion_page = GameConclusionTemplate(self.frames_container, self.quit)
+
+        self.game_pages = GamePageTemplate(
+            self.frames_container, self.choose_failed_or_success_page
+        )
+        self.fail_page = GameFailedTemplate(
+            self.frames_container, self.choose_game_or_conclusion_page
+        )
+        self.success_page = GameSuccessTemplate(
+            self.frames_container, self.choose_game_or_conclusion_page
+        )
+        self.presentation_page = GamePresentationTemplate(
+            self.frames_container,
+            func=self.switch_to_game_page,
+        )
+
+        # start game
+        self.switch_frame(self.presentation_page)
+
+    def choose_failed_or_success_page(self):
+        """Choose either to launch failure page or success page"""
+
+        if self.validate_user_input():
+            self.player_score.current_score = self.player_score.current_score + 1
+            self.switch_frame(self.success_page)
+            self._previous_frame_name = VerbenLernenEnum.SUCCESS_PG.value
+            self.success_page.template_launcher()
+        else:
+            self.player_score.current_score = self.player_score.current_score
+            self.switch_frame(self.fail_page)
+            self._previous_frame_name = VerbenLernenEnum.FAIL_PG.value
+            self.fail_page.template_launcher()
+
+    def choose_game_or_conclusion_page(self):
+        """Choose either to go to game page or conclusion page"""
+
+        self._verb_to_find = self.verbs_handler.select_verb()
+
+        if len(self.verbs_handler._used_verbs) == self.max_game:
+            self.switch_frame(self.conclusion_page)
+            self._previous_frame_name = VerbenLernenEnum.END_PG.value
+            self.conclusion_page.template_launcher(self.player_score.current_score)
+        else:
+            self.switch_frame(self.game_pages)
+            self._previous_frame_name = VerbenLernenEnum.GAME_PG.value
+            self.game_pages.template_launcher(
+                self._verb_to_find[TenseKey.INFINITIVE],
+                len(self.verbs_handler._not_used_verbs),
+                self.player_score.current_score,
+            )
+
     def validate_user_input(self) -> bool:
         """Check user entries, and return True if all entries are correct"""
-
-        # init: if reset trigger
-        if self.reset_trigger:
-            # do nothing if called from reset
-            return
 
         if (
             self.game_pages.imperfect_entried == self._verb_to_find[TenseKey.PERFECT]
@@ -212,5 +272,4 @@ class VerbenLernenApp(tk.Tk):
 
 if __name__ == "__main__":
     game_app = VerbenLernenApp()
-    game_app.start()
     game_app.mainloop()
