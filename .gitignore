@@ -1,3 +1,12 @@
 *.pyc
 *.cpython-37
 *.cpython-37.pyc
+#file should be ignore by .git
+
+#__pycache__
+__pycache__/
+*.pyc
+
+*.vscode
+
+
