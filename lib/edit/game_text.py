@@ -6,24 +6,23 @@ Find in this package all VerbenLernen texts game.
 
 presentation_text = """
 
-        Willkommen in VerbenLernen Spiel
+                Willkommen auf VerbenLernen Spiel
 
-The goal of this game is to help you master german verben in any tense!
+The goal of this game is to help you master german verbe in any tense!
 
-The game will propose you an infinitive verb, and you will have 20 seconds 
+The game will propose you an infinitive verb, and you will have 40 seconds 
 to find his imperfect, and preterite tense.
 
-If your answer is correct you will move to the next verb and keep your current points.	
-If your answer is false, you will move to the next verb and loose 1 point 
-from your current score.
+If your answer is correct you will move to the next verb and gain 1 point.	
+If your answer is false, you will move to the next verb and keep your current score.
 
-If you do not answer before the end of countdown, you will loose 1 point 
+If you do not answer before the end of the countdown, you will keep your current score 
 and go to the next verb !
 
-If the rules make sense for you, you can start the game by clicking on start button,
+If the rules make sense for you, you can start the game by clicking on the start button,
 under this rules description.
 
-Please ENJOY THE GAME !
+Please ENJOY VerbenLernen GAME !
 
 """
 
@@ -44,5 +43,5 @@ infinitive_text = "Infinitive verb:"
 imperfect_tense_text = "Imperfect tense:"
 preterite_tense_text = "Preterite tense:"
 
-success_text = "Right Answer ! \n" + "Bravo !"
-failed_text = "Wrong Answer ! \n" + "My Bad !"
+success_text = "Right Answer ! Bravo ! Here the complete answer:"
+failed_text = "Wrong Answer ! My Bad ! Here the complete answer:"

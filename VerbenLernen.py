@@ -88,11 +88,11 @@ class HandlerTenseVerbs:
         self._used_verbs.append(_tense_verb)
 
         return {
-            TenseKey.INFINITIVE: _split_tense_verb[0],
-            TenseKey.THIRD_FORM: _split_tense_verb[1],
-            TenseKey.PRETERITE: _split_tense_verb[2],
-            TenseKey.PERFECT: _split_tense_verb[3] + " " + _split_tense_verb[4],
-            TenseKey.LEVEL: _split_tense_verb[5],
+            TenseKey.INFINITIVE.value: _split_tense_verb[0],
+            TenseKey.THIRD_FORM.value: _split_tense_verb[1],
+            TenseKey.PRETERITE.value: _split_tense_verb[2],
+            TenseKey.PERFECT.value: _split_tense_verb[3] + " " + _split_tense_verb[4],
+            TenseKey.LEVEL.value: _split_tense_verb[5],
         }
 
 
@@ -152,7 +152,7 @@ class VerbenLernenApp(tk.Tk):
 
         self._current_frame = frame_class
         # TO DO : log current frame
-        if self._is_first_switch:
+        if self._is_first_switch:  # to launch presentation page
             self._is_first_switch = False
             self._previous_frame_name = VerbenLernenEnum.START_PG.value
             self._current_frame.template_launcher()
@@ -233,12 +233,12 @@ class VerbenLernenApp(tk.Tk):
             self.player_score.current_score = self.player_score.current_score + 1
             self.switch_frame(self.success_page)
             self._previous_frame_name = VerbenLernenEnum.SUCCESS_PG.value
-            self.success_page.template_launcher()
+            self.success_page.template_launcher(self._verb_to_find)
         else:
             self.player_score.current_score = self.player_score.current_score
             self.switch_frame(self.fail_page)
             self._previous_frame_name = VerbenLernenEnum.FAIL_PG.value
-            self.fail_page.template_launcher()
+            self.fail_page.template_launcher(self._verb_to_find)
 
     def choose_game_or_conclusion_page(self):
         """Choose either to go to game page or conclusion page"""
@@ -262,9 +262,10 @@ class VerbenLernenApp(tk.Tk):
         """Check user entries, and return True if all entries are correct"""
 
         if (
-            self.game_pages.imperfect_entried == self._verb_to_find[TenseKey.PERFECT]
-            and self.game_pages.preterite_entried
-            == self._verb_to_find[TenseKey.PRETERITE]
+            self.game_pages.imperfect_entried.get()
+            == self._verb_to_find[TenseKey.PERFECT.value]
+            and self.game_pages.preterite_entried.get()
+            == self._verb_to_find[TenseKey.PRETERITE.value]
         ):
             return True
         return False

@@ -19,6 +19,7 @@ from lib.constant_values import (
     TkSide,
     TkStates,
     GradePlayer,
+    TenseKey,
 )
 
 from tkinter.scrolledtext import ScrolledText
@@ -709,7 +710,11 @@ class GamePageTemplate(ttk.Frame):
         self.entry_preterite.focus_get()
 
         self.progress_bar = create_progress_bar(
-            self.frames[4], fill=tk.X, padx=10, pady=5
+            self.frames[4],
+            fill=tk.X,
+            padx=10,
+            pady=5,
+            callable_function=self.callable_func,
         )
         self.label_remain_verbs = create_label(
             self.frames[5],
@@ -820,8 +825,10 @@ class GameStateTemplate(ttk.Frame):
         """Get the current tk photo to use for this frame"""
         return self._tk_photo
 
-    def template_launcher(self):
-        """Default function to call to call the template window"""
+    def template_launcher(self, verb_to_find: dict):
+        """Default function to call to call the template window
+
+        :param verb_to_find: current tense verb used in the game"""
 
         for nber in range(self._nber_frames):
             frame = create_frame(
@@ -833,6 +840,13 @@ class GameStateTemplate(ttk.Frame):
             )
             self.frames.append(frame)
 
+        verb_to_find_ans = (
+            f"Infinitive: {verb_to_find[TenseKey.INFINITIVE.value]},\n"
+            + f"Verb singular third form: {verb_to_find[TenseKey.THIRD_FORM.value]},\n"
+            + f"Preterite: {verb_to_find[TenseKey.PRETERITE.value]},\n"
+            + f"Perfect: {verb_to_find[TenseKey.PERFECT.value]},\n"
+            + f"Verb Level: {verb_to_find[TenseKey.LEVEL.value]}"
+        )
         self.photo_label = create_photo_label(
             self.frames[0],
             tk_photo=self._tk_photo,
@@ -841,11 +855,23 @@ class GameStateTemplate(ttk.Frame):
             pady=10,
         )
 
+        self.submit_button = create_label(
+            self.frames[1],
+            text=verb_to_find_ans,
+            anchor=TkAnchorNSticky.W,
+            side=TkSide.LEFT,
+            padx=25,
+            ipadx=5,
+        )
+
         self.submit_button = create_button(
             self.frames[1],
             text=submit_text,
-            anchor=tk.NE,
+            anchor=TkAnchorNSticky.E,
             callable_function=self.callable_func,
+            side=TkSide.RIGHT,
+            padx=25,
+            ipadx=5,
         )
 
 
