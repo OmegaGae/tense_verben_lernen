@@ -27,8 +27,8 @@ this app need: ``python >= 3.7.4``
     2. Activate your virtual environment : `` source <DIR>/Scripts/activate``
     3. go to root project: `` cd <DIR>/TENSE_VERBEN_LERNEN ``
     4. install requirements: `` pip install -r requirements ``
-    5. find source code named  **_VerbenLernen.py_**
-4. Open **_VerbenLernen.py_** and run it with an editor as **_VScode_**
+    5. find source code named  `VerbenLernen.py`
+4. Open `VerbenLernen.py` and run it with an editor as **_VScode_**
 
  ### _To go further_
   the game can be launched by clicking directly on the icon
