@@ -2,6 +2,7 @@
 
 import sys
 from pathlib import Path
+
 from typing import Optional, Union, List, Callable
 
 path_test = Path(__file__).resolve().parents[2]
@@ -20,6 +21,8 @@ from lib.constant_values import (
     TkStates,
     GradePlayer,
     TenseKey,
+    VlColors,
+    StyleNamesCustomized,
 )
 
 from tkinter.scrolledtext import ScrolledText
@@ -96,11 +99,13 @@ def check_input(value_to_check: Union[tuple, List[tuple]]) -> Union[Exception, N
 
 def create_frame(
     frame: ttk.Frame,
+    frame_style: Optional[str] = None,
     tk_relief: Union[TkRelief, str] = TkRelief.FLAT,
     **pack_options,
 ) -> ttk.Frame:
     """Create a frame that will be contained in an already existing parent frame
     :param frame: Parent frame
+    :param frame_style: Configured frame style. Default set to None
     :param tk_relief: Tkinter constant for frame relief. Default set to flat
     :param pack_options: Configuration options to pack the created frame.
     Only pack options are expected.
@@ -112,12 +117,17 @@ def create_frame(
     # check input
     check_input((frame, ttk.Frame))
 
-    if not (isinstance(tk_relief, TkRelief) or isinstance(tk_relief, str)):
+    if not isinstance(tk_relief, (TkRelief, str)):
         raise TypeError(
-            f"Your Input type:{type(tk_relief)}, is different from expected input type"
+            f"Your Input type:{type(tk_relief)}, is different from expected input type for tk_relief"
         )
 
-    frame = ttk.Frame(frame, relief=tk_relief)
+    if not isinstance(frame_style, (str, type(None))):
+        raise TypeError(
+            f"Your Input type:{type(frame_style)}, is different from expected input type for frame_input"
+        )
+
+    frame = ttk.Frame(frame, relief=tk_relief, style=frame_style)
     try:
         frame.pack(
             fill=pack_options.get("fill"),
@@ -502,9 +512,12 @@ class GamePresentationTemplate(ttk.Frame):
     you can go to the next page by clicking onto the next button.
     """
 
+    template_colors = VlColors()
+
     def __init__(
         self,
         parent: ttk.Frame,
+        style: ttk.Style,
         func: Callable,
         game_presentation: str = presentation_text,
     ):
@@ -512,13 +525,15 @@ class GamePresentationTemplate(ttk.Frame):
         Init module for game presentation template class.
 
         :param parent: Root widget
+        :param style: Style object. Defined for parent, so for child. To customized if needded.
         :param func: Callable function
         :param presentation_text: Game presentation. Default set to game_text.presentation_text
         """
-        check_input([(parent, ttk.Frame), (game_presentation, str)])
+        check_input([(parent, ttk.Frame), (game_presentation, str), (style, ttk.Style)])
 
         self.parent = parent
         self.presentation_text = game_presentation
+        self.style = style
         super().__init__(parent)
 
         self.pack(
@@ -536,11 +551,18 @@ class GamePresentationTemplate(ttk.Frame):
         }
         self._nber_frames = len(self.config_frames)
 
-    def scrowling_text(
+        self.style.configure(
+            StyleNamesCustomized.tframe,
+            background=self.template_colors.blue_grey,
+        )
+
+    def scrolling_text(
         self,
         frame: ttk.Frame,
         width: Optional[int] = None,
         height: Optional[int] = None,
+        fg_color: str = VlColors.dark,
+        bg_color: str = VlColors.lavande,
     ):
         """
         Display a text in a scrowling text box.
@@ -548,37 +570,51 @@ class GamePresentationTemplate(ttk.Frame):
         :param frame: Parent frame
         :param width: (Optional) define the scrowling text box width. Default set to None
         :param heigth: (Optional) define the scrowling text box heigth. Default set to None
+        :param fg_color: (Optiobal) Customized foregroung button color
+        :param bg_color: (Optiobal) Customized backgroung button color"""
+        scrolling_text = ScrolledText(frame, width=width, height=height)
+        scrolling_text.insert(tk.END, self.presentation_text)
+        scrolling_text.pack(fill=tk.BOTH, side=tk.TOP, expand=True, padx=5)
+        scrolling_text.configure(state=tk.DISABLED)
+        scrolling_text.configure(
+            foreground=fg_color,
+            background=bg_color,
+        )
 
-        """
-        scrowling_text = ScrolledText(frame, width=width, height=height)
-        scrowling_text.insert(tk.END, self.presentation_text)
-        scrowling_text.pack(fill=tk.BOTH, side=tk.TOP, expand=True, padx=5)
-        scrowling_text.configure(state=tk.DISABLED)
-
-    def start_button(self, frame: ttk.Frame, func: Callable):
+    def start_button(
+        self,
+        frame: ttk.Frame,
+        func: Callable,
+        button_position: str = TkSide.BOTTOM,
+        bg_color: str = VlColors.turquoise_2,
+    ):
         """
         create a start button for the frame
 
         :param frame: Parent frame
-        :param func: Callable function"""
+        :param func: Callable function
+        :param button_position: (Optiobal) Position to place the button. Default set to Bottom
+        :param bg_color: (Optiobal) Customized backgroung button color"""
 
-        start_button = ttk.Button(frame, text=start_text, command=func)
-        start_button.pack(side=tk.BOTTOM, ipadx=5, ipady=5)
-        start_button.focus_get()
+        start_button = tk.Button(frame, text=start_text, command=func, bg=bg_color)
+        start_button.pack(side=button_position, ipadx=15, ipady=5, pady=20)
 
-    def template_launcher(self):
-        """Default function to call to call the template window"""
+    def template_launcher(self, frame_style: str = StyleNamesCustomized.tframe):
+        """Default function to call to call the template window
+        :param frame_style: (Optiobal) Customized style frame, see ttk.Style"""
+
         # create frames
         for nber in range(self._nber_frames):
             frame = create_frame(
                 self,
+                frame_style=frame_style,
                 fill=self.config_frames[nber]["fill"],
                 side=self.config_frames[nber]["side"],
                 pady=self.config_frames[nber]["pady"],
             )
             self.frames.append(frame)
 
-        self.scrowling_text(self.frames[0])
+        self.scrolling_text(self.frames[0])
         self.start_button(self.frames[1], self.callable_func)
 
 
@@ -1073,8 +1109,12 @@ if __name__ == "__main__":
     root.resizable(0, 0)
     frame_root = ttk.Frame(root)
     frame_root.pack(side=TkSide.TOP, fill=TkFilling.BOTH, expand=True)
+
+    style = ttk.Style(frame_root)
+    style.configure("TFrame", background=VlColors.blue_grey)
+
     pr = GamePresentationTemplate(
-        frame_root, change_frame
+        frame_root, style, change_frame
     )  # when using buttom callable should be call without parenthesis
     pr.template_launcher()
     root.mainloop()
