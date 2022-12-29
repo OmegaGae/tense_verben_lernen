@@ -35,7 +35,8 @@ class VlColors:
     light_grey: str = field(default="#B3B3B3")
     grey: str = field(default="#7F827F")
     grey_2: str = field(default="#737373")
-    dark_grey: str = field(default="#7D7D7D")
+    dark_grey: str = field(default="#373737")
+    dark_grey_2: str = field(default="#7D7D7D")
     white: str = field(default="#FFFFFF")
     dark: str = field(default="#000000")
 
@@ -44,6 +45,10 @@ class VlColors:
 class StyleNamesCustomized:
     # style names defined in GamePresentationTemplate
     tframe: str = field(default="TFrame")
+    tlabel: str = field(default="TLabel")
+    tlabel_calibri10: str = field(default="Calibri10.TLabel")
+    tlabel_arial_black10: str = field(default="ArialBlack10.TLabel")
+    tlabel_arial_black18: str = field(default="ArialBlack18.TLabel")
 
 
 @unique

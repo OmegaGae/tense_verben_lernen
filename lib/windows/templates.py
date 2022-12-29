@@ -99,13 +99,11 @@ def check_input(value_to_check: Union[tuple, List[tuple]]) -> Union[Exception, N
 
 def create_frame(
     frame: ttk.Frame,
-    frame_style: Optional[str] = None,
     tk_relief: Union[TkRelief, str] = TkRelief.FLAT,
     **pack_options,
 ) -> ttk.Frame:
     """Create a frame that will be contained in an already existing parent frame
     :param frame: Parent frame
-    :param frame_style: Configured frame style. Default set to None
     :param tk_relief: Tkinter constant for frame relief. Default set to flat
     :param pack_options: Configuration options to pack the created frame.
     Only pack options are expected.
@@ -122,12 +120,7 @@ def create_frame(
             f"Your Input type:{type(tk_relief)}, is different from expected input type for tk_relief"
         )
 
-    if not isinstance(frame_style, (str, type(None))):
-        raise TypeError(
-            f"Your Input type:{type(frame_style)}, is different from expected input type for frame_input"
-        )
-
-    frame = ttk.Frame(frame, relief=tk_relief, style=frame_style)
+    frame = ttk.Frame(frame, relief=tk_relief)
     try:
         frame.pack(
             fill=pack_options.get("fill"),
@@ -151,6 +144,7 @@ def create_label(
     tk_relief: Union[TkRelief, str] = TkRelief.FLAT,
     tk_anchor: Union[TkAnchorNSticky, str] = TkAnchorNSticky.CENTER,
     tk_width: Optional[int] = None,
+    label_style: str = StyleNamesCustomized.tlabel,
     **pack_options,
 ) -> ttk.Label:
     """Create a label that will be contained in an already existing parent frame
@@ -160,6 +154,7 @@ def create_label(
     :param tk_relief: Tkinter constant for label relief. Default set to flat
     :param tk_anchor: Tkinter constant for label anchor. Default set to center
     :param tk_width: (optional) Width of the label widget
+    :param label_style: (optional) customized style of the label.
     :param pack_options: Configuration options to pack the created label.
     Only pack options are expected.
 
@@ -168,7 +163,7 @@ def create_label(
     :raise TypeError: Error raised when input type is different from expected type"""
 
     # check input
-    inputs_to_check = [(frame, ttk.Frame), (text, str)]
+    inputs_to_check = [(frame, ttk.Frame), (text, str), (label_style, str)]
     check_input(inputs_to_check)
 
     # add check for size parameter ?
@@ -189,6 +184,7 @@ def create_label(
         width=tk_width,
         relief=tk_relief,
         anchor=tk_anchor,
+        style=label_style,
     )
     try:
         tk_label.pack(
@@ -287,6 +283,8 @@ def create_text(
     tk_width: int = 30,
     tk_height: int = 1,
     tk_state: Union[TkStates, str] = TkStates.DISABLED,
+    fg_color: str = VlColors.dark,
+    bg_color: str = VlColors.dark_grey,
     **pack_options,
 ) -> tk.Text:
     """Create a tkinter text that will be contained in an already existing parent frame
@@ -297,6 +295,8 @@ def create_text(
     :param tk_height: Height of the text widget. Default set to 1
     :param tk_state: State of tkinter widget text. Default state set to disabled.
     Disabled for read only, Normal for edit mode.
+    :param fg_color: (Optional) Customized foregroung text color
+    :param bg_color: (Optional) Customized backgroung text color
     :param pack_options: Configuration options to pack the created text.
     Only pack options are expected.
 
@@ -310,6 +310,8 @@ def create_text(
         (text, str),
         (tk_width, int),
         (tk_height, int),
+        (fg_color, str),
+        (bg_color, str),
     ]
     check_input(inputs_to_check)
 
@@ -318,7 +320,9 @@ def create_text(
             f"Your Input type:{type(tk_state)}, is different from expected input type"
         )
 
-    tk_text = tk.Text(frame, height=tk_height, width=tk_width)
+    tk_text = tk.Text(
+        frame, height=tk_height, width=tk_width, fg=fg_color, background=bg_color
+    )
     tk_text.insert(tk.END, text)  # line.column == 1.0
     try:
         tk_text.pack(
@@ -343,6 +347,8 @@ def create_entry(
     frame: ttk.Frame,
     tk_textvariable: tk.StringVar,
     tk_width: int,
+    fg_color: str = VlColors.dark_brown,
+    bg_color: str = VlColors.light_grey,
     **pack_options,
 ) -> tk.Entry:
     """Create a tkinter entry that will be contained in an already existing parent frame
@@ -350,6 +356,8 @@ def create_entry(
     :param frame: Parent frame
     :param tk_textvariable: Catch user input text into this parameter
     :param tk_width: Width of the entry widget
+    :param fg_color: (Optional) Customized foregroung button color
+    :param bg_color: (Optional) Customized backgroung button color
     :param pack_options: Configuration options to pack the created entry.
     Only pack options are expected.
 
@@ -362,10 +370,14 @@ def create_entry(
         (frame, ttk.Frame),
         (tk_textvariable, tk.StringVar),
         (tk_width, int),
+        (fg_color, str),
+        (bg_color, str),
     ]
     check_input(inputs_to_check)
 
-    tk_entry = tk.Entry(frame, textvariable=tk_textvariable, width=tk_width)
+    tk_entry = tk.Entry(
+        frame, textvariable=tk_textvariable, width=tk_width, fg=fg_color, bg=bg_color
+    )
     try:
         tk_entry.pack(
             fill=pack_options.get("fill"),
@@ -461,6 +473,8 @@ def create_button(
     frame: ttk.Frame,
     text: str,
     callable_function: Optional[Callable] = None,
+    fg_color: str = VlColors.dark,
+    bg_color: str = VlColors.purple,
     **pack_options,
 ) -> ttk.Button:
     """Create a tkinter button that will be contained in an already existing parent frame
@@ -469,6 +483,8 @@ def create_button(
     :param text: Text to insert into tkinter Button widget
     :param callable_function: Function to call when clicking on the button.
     Default value set to None
+    :param fg_color: (Optional) Customized foregroung button color
+    :param bg_color: (Optional) Customized backgroung button color
     :param pack_options: Configuration options to pack the created button.
     Only pack options are expected.
 
@@ -480,13 +496,17 @@ def create_button(
     inputs_to_check = [
         (frame, ttk.Frame),
         (text, str),
+        (fg_color, str),
+        (bg_color, str),
     ]
     check_input(inputs_to_check)
 
     if not callable_function:
         callable_function = frame.quit
 
-    tk_button = ttk.Button(frame, text=text, command=callable_function)
+    tk_button = tk.Button(
+        frame, text=text, command=callable_function, fg=fg_color, bg=bg_color
+    )
 
     try:
         tk_button.pack(
@@ -517,7 +537,6 @@ class GamePresentationTemplate(ttk.Frame):
     def __init__(
         self,
         parent: ttk.Frame,
-        style: ttk.Style,
         func: Callable,
         game_presentation: str = presentation_text,
     ):
@@ -525,15 +544,13 @@ class GamePresentationTemplate(ttk.Frame):
         Init module for game presentation template class.
 
         :param parent: Root widget
-        :param style: Style object. Defined for parent, so for child. To customized if needded.
         :param func: Callable function
         :param presentation_text: Game presentation. Default set to game_text.presentation_text
         """
-        check_input([(parent, ttk.Frame), (game_presentation, str), (style, ttk.Style)])
+        check_input([(parent, ttk.Frame), (game_presentation, str)])
 
         self.parent = parent
         self.presentation_text = game_presentation
-        self.style = style
         super().__init__(parent)
 
         self.pack(
@@ -550,11 +567,6 @@ class GamePresentationTemplate(ttk.Frame):
             1: {"fill": tk.X, "side": tk.BOTTOM, "pady": 10},
         }
         self._nber_frames = len(self.config_frames)
-
-        self.style.configure(
-            StyleNamesCustomized.tframe,
-            background=self.template_colors.blue_grey,
-        )
 
     def scrolling_text(
         self,
@@ -586,6 +598,7 @@ class GamePresentationTemplate(ttk.Frame):
         frame: ttk.Frame,
         func: Callable,
         button_position: str = TkSide.BOTTOM,
+        fg_color: str = VlColors.dark,
         bg_color: str = VlColors.turquoise_2,
     ):
         """
@@ -594,9 +607,12 @@ class GamePresentationTemplate(ttk.Frame):
         :param frame: Parent frame
         :param func: Callable function
         :param button_position: (Optiobal) Position to place the button. Default set to Bottom
+        :param fg_color: (Optiobal) Customized foregroung button color
         :param bg_color: (Optiobal) Customized backgroung button color"""
 
-        start_button = tk.Button(frame, text=start_text, command=func, bg=bg_color)
+        start_button = tk.Button(
+            frame, text=start_text, command=func, fg=fg_color, bg=bg_color
+        )
         start_button.pack(side=button_position, ipadx=15, ipady=5, pady=20)
 
     def template_launcher(self, frame_style: str = StyleNamesCustomized.tframe):
@@ -624,6 +640,8 @@ class GamePageTemplate(ttk.Frame):
     Page as each game window is a game page. Go to the next game page
     by clicking on the SUBMIT Button.
     """
+
+    template_colors = VlColors()
 
     def __init__(self, parent: ttk.Frame, func: Callable):
         """
@@ -653,10 +671,10 @@ class GamePageTemplate(ttk.Frame):
             0: {"fill": tk.X, "side": tk.TOP, "pady": 10},
             1: {"fill": tk.X, "side": None, "pady": 40},
             2: {"fill": tk.X, "side": None, "pady": None},
-            3: {"fill": tk.X, "side": None, "pady": 15},
+            3: {"fill": tk.X, "side": None, "pady": 10},
             4: {"fill": tk.X, "side": tk.BOTTOM, "pady": 10},
             5: {"fill": tk.X, "side": tk.BOTTOM, "pady": 10},
-            6: {"fill": tk.X, "side": tk.BOTTOM, "pady": 75},
+            6: {"fill": tk.X, "side": tk.BOTTOM, "pady": 70},
         }
         self._nber_frames = len(self.config_frames)
 
@@ -686,12 +704,18 @@ class GamePageTemplate(ttk.Frame):
         # create widgets
 
         self.label_game = create_label(
-            self.frames[0], text=game_title, tk_height=1, fill=tk.X, pady=5
+            self.frames[0],
+            text=game_title,
+            tk_height=1,
+            label_style=StyleNamesCustomized.tlabel_arial_black18,
+            fill=tk.X,
+            pady=5,
         )
         self.label_infinitive = create_label(
             self.frames[1],
             text=infinitive_text,
             tk_width=30,
+            label_style=StyleNamesCustomized.tlabel_calibri10,
             tk_anchor=tk.E,
             side=TkSide.LEFT,
             padx=10,
@@ -710,6 +734,7 @@ class GamePageTemplate(ttk.Frame):
             self.frames[2],
             text=imperfect_tense_text,
             tk_width=35,
+            label_style=StyleNamesCustomized.tlabel_calibri10,
             tk_anchor=tk.CENTER,
             side=TkSide.LEFT,
             padx=10,
@@ -719,6 +744,7 @@ class GamePageTemplate(ttk.Frame):
             self.frames[2],
             text=preterite_tense_text,
             tk_width=35,
+            label_style=StyleNamesCustomized.tlabel_calibri10,
             tk_anchor=tk.CENTER,
             side=tk.RIGHT,
             padx=10,
@@ -756,6 +782,7 @@ class GamePageTemplate(ttk.Frame):
             self.frames[5],
             text=left_verbs,
             tk_width=25,
+            label_style=StyleNamesCustomized.tlabel_arial_black10,
             tk_anchor=TkAnchorNSticky.W,
             side=TkSide.LEFT,
             padx=25,
@@ -766,6 +793,7 @@ class GamePageTemplate(ttk.Frame):
             self.frames[5],
             text=current_score,
             tk_width=25,
+            label_style=StyleNamesCustomized.tlabel_arial_black10,
             tk_anchor=TkAnchorNSticky.E,
             side=TkSide.RIGHT,
             padx=25,
@@ -777,6 +805,8 @@ class GamePageTemplate(ttk.Frame):
             text=submit_text,
             anchor=tk.CENTER,
             callable_function=self.callable_func,
+            ipadx=15,
+            ipady=5,
         )
 
 
@@ -1098,6 +1128,39 @@ def change_frame():
     auc.template_launcher("richie", 15, 5)
 
 
+def configure_style(frame):
+    style = ttk.Style(frame)
+    style.configure("TFrame", background=VlColors.blue_grey)
+
+    style.configure(
+        StyleNamesCustomized.tframe,
+        background=VlColors.blue_grey,
+    )
+    style.configure(
+        StyleNamesCustomized.tlabel,
+        background=VlColors.blue_grey,
+        foreground=VlColors.dark,
+    )
+    style.configure(
+        StyleNamesCustomized.tlabel_calibri10,
+        background=VlColors.blue_grey,
+        foreground=VlColors.dark,
+        font=("Calibri", "12"),
+    )
+    style.configure(
+        StyleNamesCustomized.tlabel_arial_black10,
+        background=VlColors.blue_grey,
+        foreground=VlColors.dark,
+        font=("Arial Black", "10"),
+    )
+    style.configure(
+        StyleNamesCustomized.tlabel_arial_black18,
+        background=VlColors.blue_grey,
+        foreground=VlColors.dark,
+        font=("Arial Black", "18"),
+    )
+
+
 if __name__ == "__main__":
     from lib.constant_values import TkFilling
 
@@ -1109,12 +1172,10 @@ if __name__ == "__main__":
     root.resizable(0, 0)
     frame_root = ttk.Frame(root)
     frame_root.pack(side=TkSide.TOP, fill=TkFilling.BOTH, expand=True)
-
-    style = ttk.Style(frame_root)
-    style.configure("TFrame", background=VlColors.blue_grey)
+    configure_style(frame_root)
 
     pr = GamePresentationTemplate(
-        frame_root, style, change_frame
+        frame_root, change_frame
     )  # when using buttom callable should be call without parenthesis
     pr.template_launcher()
     root.mainloop()
