@@ -11,18 +11,18 @@
 import random
 import tkinter as tk
 from tkinter import ttk
-from enum import Enum
 
-from typing import Dict, List, Any
+from typing import Dict, List
 from lib.edit.editfile import Editfile
 from lib.edit import STARKE_UNREGELMEASSIE
 from lib.constant_values import (
     TenseKey,
-    TkAnchorNSticky,
     TkFilling,
     TkRelief,
     TkSide,
     VerbenLernenEnum,
+    VlColors,
+    StyleNamesCustomized,
 )
 from lib.windows import (
     GamePresentationTemplate,
@@ -141,6 +141,7 @@ class VerbenLernenApp(tk.Tk):
         self.frames_container.config(relief=TkRelief.GROOVE)
         self.frames_container.pack(side=TkSide.TOP, fill=TkFilling.BOTH, expand=True)
 
+        self.configure_style(self.frames_container)
         self._reset()
 
     def switch_frame(self, frame_class):
@@ -165,6 +166,40 @@ class VerbenLernenApp(tk.Tk):
             self._verb_to_find[TenseKey.INFINITIVE],
             len(self.verbs_handler._not_used_verbs),
             self.player_score.current_score,
+        )
+
+    def configure_style(self, frame):
+        """Customized ttk widgets style
+        :param frame: Reference frame which style will be applyed"""
+        style = ttk.Style(frame)
+        style.configure("TFrame", background=VlColors.blue_grey)
+
+        style.configure(
+            StyleNamesCustomized.tframe,
+            background=VlColors.blue_grey,
+        )
+        style.configure(
+            StyleNamesCustomized.tlabel,
+            background=VlColors.blue_grey,
+            foreground=VlColors.dark,
+        )
+        style.configure(
+            StyleNamesCustomized.tlabel_calibri10,
+            background=VlColors.blue_grey,
+            foreground=VlColors.dark,
+            font=("Calibri", "12", "bold"),
+        )
+        style.configure(
+            StyleNamesCustomized.tlabel_arial_black10,
+            background=VlColors.blue_grey,
+            foreground=VlColors.dark,
+            font=("Arial Black", "10"),
+        )
+        style.configure(
+            StyleNamesCustomized.tlabel_arial_black18,
+            background=VlColors.blue_grey,
+            foreground=VlColors.dark,
+            font=("Arial Black", "18"),
         )
 
     def page_creator(self):

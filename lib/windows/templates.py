@@ -951,7 +951,8 @@ class GameStateTemplate(ttk.Frame):
             callable_function=self.callable_func,
             side=TkSide.RIGHT,
             padx=25,
-            ipadx=5,
+            pady=5,
+            ipadx=15,
             bg_color=VlColors.green_water,
         )
 
@@ -1046,8 +1047,8 @@ class GameConclusionTemplate(ttk.Frame):
             0: {"fill": tk.X, "side": tk.TOP, "pady": 10},
             1: {"fill": tk.X, "pady": 40},
             2: {"fill": tk.X},
-            3: {"fill": tk.X, "pady": 65},
-            4: {"fill": tk.X, "side": tk.BOTTOM, "pady": 10},
+            3: {"fill": tk.X, "pady": 75},
+            4: {"fill": tk.X, "side": tk.BOTTOM, "pady": 20},
         }
         self._nber_frames = len(self.config_frames)
 
@@ -1135,7 +1136,7 @@ class GameConclusionTemplate(ttk.Frame):
         self.label_game_conclusion = create_label(
             self.frames[4],
             text=conclusion_text,
-            tk_anchor=TkAnchorNSticky.W,
+            tk_anchor=TkAnchorNSticky.SW,
             label_style=StyleNamesCustomized.tlabel_arial_black10,
             side=TkSide.LEFT,
             padx=25,
@@ -1145,9 +1146,10 @@ class GameConclusionTemplate(ttk.Frame):
             self.frames[4],
             text=close_app_text,
             side=TkSide.RIGHT,
-            anchor=TkAnchorNSticky.W,
+            anchor=TkAnchorNSticky.SE,
             bg_color=VlColors.turquoise_2,
             padx=10,
+            ipadx=5,
             callable_function=self.callable_func,
         )
 
