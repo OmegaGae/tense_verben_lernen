@@ -26,7 +26,11 @@ from lib.constant_values import (
 )
 
 from tkinter.scrolledtext import ScrolledText
-from lib.img import PATH_TO_POSITIVE_SMILEY, PATH_TO_SAD_SMILEY, PATH_TO_THUM_UP_SMILEY
+from lib.img import (
+    PATH_TO_POSITIVE_SMILEY,
+    PATH_TO_SAD_SMILEY_2,
+    PATH_TO_THUM_UP_SMILEY,
+)
 
 from PIL import ImageTk, Image
 
@@ -210,6 +214,7 @@ def create_photo_label(
     tk_relief: Union[TkRelief, str] = TkRelief.FLAT,
     text: Optional[str] = None,
     tk_width: Optional[int] = None,
+    label_style: str = StyleNamesCustomized.tlabel,
     **pack_options,
 ) -> ttk.Label:
     """Create a label that will be contained in an already existing parent frame
@@ -221,6 +226,7 @@ def create_photo_label(
     :param tk_relief: Tkinter constant for label relief. Default set to flat
     :param text: (optional) Label text
     :param tk_width: (optional) Width of the label widget
+    :param label_style: (optional) customized style of the label
     :param pack_options: Configuration options to pack the created label.
     Only pack options are expected.
 
@@ -229,20 +235,24 @@ def create_photo_label(
     :raise TypeError: Error raised when input type is different from expected type"""
 
     # check input
-    inputs_to_check = [(frame, ttk.Frame), (tk_photo, ImageTk.PhotoImage)]
+    inputs_to_check = [
+        (frame, ttk.Frame),
+        (tk_photo, ImageTk.PhotoImage),
+        (label_style, str),
+    ]
     check_input(inputs_to_check)
 
-    if not (isinstance(tk_anchor, TkAnchorNSticky) or isinstance(tk_anchor, str)):
+    if not isinstance(tk_anchor, (TkAnchorNSticky, str)):
         raise TypeError(
             f"Your Input type:{type(tk_anchor)}, is different from expected input type"
         )
 
-    if not (isinstance(tk_compound, TkSide) or isinstance(tk_compound, str)):
+    if not isinstance(tk_compound, (TkSide, str)):
         raise TypeError(
             f"Your Input type:{type(tk_compound)}, is different from expected input type"
         )
 
-    if not (isinstance(tk_relief, TkRelief) or isinstance(tk_relief, str)):
+    if not isinstance(tk_relief, (TkRelief, str)):
         raise TypeError(
             f"Your Input type:{type(tk_relief)}, is different from expected input type"
         )
@@ -260,6 +270,7 @@ def create_photo_label(
         relief=tk_relief,
         text=text,
         width=tk_width,
+        style=label_style,
     )
     try:
         tk_photo_label.pack(
@@ -284,7 +295,7 @@ def create_text(
     tk_height: int = 1,
     tk_state: Union[TkStates, str] = TkStates.DISABLED,
     fg_color: str = VlColors.dark,
-    bg_color: str = VlColors.dark_grey,
+    bg_color: str = VlColors.dark_grey_2,
     **pack_options,
 ) -> tk.Text:
     """Create a tkinter text that will be contained in an already existing parent frame
@@ -819,8 +830,8 @@ class GameStateTemplate(ttk.Frame):
         self,
         parent: ttk.Frame,
         func: Callable,
-        img_path: str = PATH_TO_THUM_UP_SMILEY,
-        resize_values: tuple = (400, 350),
+        img_path: str = PATH_TO_POSITIVE_SMILEY,
+        resize_values: tuple = (350, 300),
         type_resize: Image.Resampling = Image.Resampling.LANCZOS,
         text_to_display: str = success_text,
     ):
@@ -919,25 +930,29 @@ class GameStateTemplate(ttk.Frame):
             tk_compound=TkSide.TOP,
             text=self._text_to_display,
             pady=10,
+            label_style=StyleNamesCustomized.tlabel_calibri10,
         )
 
         self.submit_button = create_label(
             self.frames[1],
             text=verb_to_find_ans,
-            anchor=TkAnchorNSticky.W,
+            anchor=TkAnchorNSticky.NW,
+            label_style=StyleNamesCustomized.tlabel_arial_black10,
             side=TkSide.LEFT,
             padx=25,
+            pady=10,
             ipadx=5,
         )
 
         self.submit_button = create_button(
             self.frames[1],
-            text=submit_text,
+            text=next_text,
             anchor=TkAnchorNSticky.E,
             callable_function=self.callable_func,
             side=TkSide.RIGHT,
             padx=25,
             ipadx=5,
+            bg_color=VlColors.green_water,
         )
 
 
@@ -950,8 +965,8 @@ class GameFailedTemplate(GameStateTemplate):
         self,
         parent: ttk.Frame,
         func: Callable,
-        img_path: str = PATH_TO_SAD_SMILEY,
-        resize_values: tuple = (400, 350),
+        img_path: str = PATH_TO_SAD_SMILEY_2,
+        resize_values: tuple = (350, 300),
         type_resize: Image.Resampling = Image.Resampling.LANCZOS,
         text_to_display: str = failed_text,
     ):
@@ -981,8 +996,8 @@ class GameSuccessTemplate(GameStateTemplate):
         self,
         parent: ttk.Frame,
         func: Callable,
-        img_path: str = PATH_TO_POSITIVE_SMILEY,
-        resize_values: tuple = (400, 350),
+        img_path: str = PATH_TO_THUM_UP_SMILEY,
+        resize_values: tuple = (350, 300),
         type_resize: Image.Resampling = Image.Resampling.LANCZOS,
         text_to_display: str = success_text,
     ):
@@ -1057,12 +1072,18 @@ class GameConclusionTemplate(ttk.Frame):
         # create widgets
 
         self.label_end_game = create_label(
-            self.frames[0], text=end_text, tk_height=1, fill=tk.X, pady=5
+            self.frames[0],
+            text=end_text,
+            tk_height=1,
+            fill=tk.X,
+            pady=5,
+            label_style=StyleNamesCustomized.tlabel_arial_black18,
         )
         self.label_final_score = create_label(
             self.frames[1],
             text=score_text,
             tk_width=30,
+            label_style=StyleNamesCustomized.tlabel_arial_black10,
             tk_anchor=TkAnchorNSticky.E,
             side=TkSide.LEFT,
             padx=10,
@@ -1070,7 +1091,13 @@ class GameConclusionTemplate(ttk.Frame):
         )
 
         self.text_final_score = create_text(
-            self.frames[1], text=_score, tk_width=8, side=TkSide.LEFT, padx=20, ipadx=4
+            self.frames[1],
+            text=_score,
+            tk_width=8,
+            bg_color=VlColors.blue_green,
+            side=TkSide.LEFT,
+            padx=20,
+            ipadx=4,
         )
 
         self.label_grade = create_label(
@@ -1078,6 +1105,7 @@ class GameConclusionTemplate(ttk.Frame):
             text=grade_text,
             tk_width=30,
             tk_anchor=TkAnchorNSticky.E,
+            label_style=StyleNamesCustomized.tlabel_arial_black10,
             side=TkSide.LEFT,
             padx=10,
             ipadx=10,
@@ -1089,6 +1117,7 @@ class GameConclusionTemplate(ttk.Frame):
             tk_width=12,
             side=TkSide.LEFT,
             tk_anchor=TkAnchorNSticky.CENTER,
+            bg_color=VlColors.blue_green,
             padx=20,
             ipadx=5,
         )
@@ -1099,6 +1128,7 @@ class GameConclusionTemplate(ttk.Frame):
             fill=tk.BOTH,
             tk_height=3,
             tk_anchor=TkAnchorNSticky.W,
+            bg_color=VlColors.lavande,
             padx=10,
         )
 
@@ -1106,6 +1136,7 @@ class GameConclusionTemplate(ttk.Frame):
             self.frames[4],
             text=conclusion_text,
             tk_anchor=TkAnchorNSticky.W,
+            label_style=StyleNamesCustomized.tlabel_arial_black10,
             side=TkSide.LEFT,
             padx=25,
             ipadx=5,
@@ -1115,6 +1146,7 @@ class GameConclusionTemplate(ttk.Frame):
             text=close_app_text,
             side=TkSide.RIGHT,
             anchor=TkAnchorNSticky.W,
+            bg_color=VlColors.turquoise_2,
             padx=10,
             callable_function=self.callable_func,
         )
@@ -1145,7 +1177,7 @@ def configure_style(frame):
         StyleNamesCustomized.tlabel_calibri10,
         background=VlColors.blue_grey,
         foreground=VlColors.dark,
-        font=("Calibri", "12"),
+        font=("Calibri", "12", "bold"),
     )
     style.configure(
         StyleNamesCustomized.tlabel_arial_black10,
@@ -1165,7 +1197,13 @@ if __name__ == "__main__":
     from lib.constant_values import TkFilling
 
     # TO TEST PACKAGE
-
+    default_dict = {
+        TenseKey.INFINITIVE.value: "richie",
+        TenseKey.THIRD_FORM.value: "richie1",
+        TenseKey.PRETERITE.value: "richieee",
+        TenseKey.PERFECT.value: "richii",
+        TenseKey.LEVEL.value: "A2",
+    }
     root = tk.Tk()
     root.title("VerbenLernen")
     root.geometry("550x500")
@@ -1174,8 +1212,8 @@ if __name__ == "__main__":
     frame_root.pack(side=TkSide.TOP, fill=TkFilling.BOTH, expand=True)
     configure_style(frame_root)
 
-    pr = GamePresentationTemplate(
+    pr = GameConclusionTemplate(
         frame_root, change_frame
     )  # when using buttom callable should be call without parenthesis
-    pr.template_launcher()
+    pr.template_launcher(10)
     root.mainloop()
