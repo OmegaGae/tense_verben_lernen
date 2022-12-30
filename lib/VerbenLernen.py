@@ -25,6 +25,7 @@ from windows import (
     GameConclusionTemplate,
     check_input,
 )
+from scripts import clean_file
 
 
 class HandlerTenseVerbs:
@@ -36,6 +37,9 @@ class HandlerTenseVerbs:
         :param max_game: Maximum game possible to play"""
 
         check_input([(file_name, str), (max_game, int)])
+
+        # clear data before manipulation
+        clean_file()
 
         self.file_name = file_name
         self.max_game = max_game
