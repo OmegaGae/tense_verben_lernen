@@ -741,9 +741,9 @@ class GamePageTemplate(ttk.Frame):
         )
         self.text_infinitive.focus_get()
 
-        self.label_imperfect = create_label(
+        self.label_preterite = create_label(
             self.frames[2],
-            text=imperfect_tense_text,
+            text=preterite_tense_text,
             tk_width=35,
             label_style=StyleNamesCustomized.tlabel_calibri10,
             tk_anchor=tk.CENTER,
@@ -751,9 +751,9 @@ class GamePageTemplate(ttk.Frame):
             padx=10,
             ipadx=5,
         )
-        self.label_preterite = create_label(
+        self.label_imperfect = create_label(
             self.frames[2],
-            text=preterite_tense_text,
+            text=perfect_tense_text,
             tk_width=35,
             label_style=StyleNamesCustomized.tlabel_calibri10,
             tk_anchor=tk.CENTER,
@@ -762,19 +762,19 @@ class GamePageTemplate(ttk.Frame):
             ipadx=5,
         )
 
-        self.entry_imperfect = create_entry(
+        self.entry_preterite = create_entry(
             self.frames[3],
-            tk_textvariable=self.imperfect_entried,
+            tk_textvariable=self.preterite_entried,
             tk_width=35,
             side=TkSide.LEFT,
             padx=10,
             ipadx=5,
         )
-        self.entry_imperfect.focus_get()
+        self.entry_preterite.focus_get()
 
-        self.entry_preterite = create_entry(
+        self.entry_imperfect = create_entry(
             self.frames[3],
-            tk_textvariable=self.preterite_entried,
+            tk_textvariable=self.imperfect_entried,
             tk_width=35,
             side=tk.RIGHT,
             padx=10,

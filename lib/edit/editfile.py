@@ -38,7 +38,7 @@ class Editfile:
         """
 
         if self.filename.split(".")[1] == "txt":
-            with open(self.data_path, "r") as txt_file:
+            with open(self.data_path, "r", encoding="utf-8") as txt_file:
                 self._textfile = txt_file.readlines()
             return self._textfile
 
