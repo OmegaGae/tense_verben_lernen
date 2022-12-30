@@ -1,12 +1,7 @@
 #!/usr/bin/env python3
 
-import sys
 from pathlib import Path
-
 from typing import Optional, Union, List, Callable
-
-path_test = Path(__file__).resolve().parents[2]
-sys.path.append(str(path_test))
 
 import tkinter as tk
 from tkinter import ttk
