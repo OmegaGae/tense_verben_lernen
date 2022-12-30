@@ -1,5 +1,5 @@
 """
-Find in this package all VerbenLernen texts game.
+Find into this package all VerbenLernen texts game.
 
 """
 
