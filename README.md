@@ -31,7 +31,7 @@ To use the project, follow below intructions:
   3. ``pip --version`` (check if ``pip`` has been well installed)
 
 1. go to command line e.g **git bash**
-2. In cmd line do : ``git clone <https://github.com/OmegaGae/tense_verben_lernen.git>``
+2. In cmd line do : ``git clone https://github.com/OmegaGae/tense_verben_lernen.git``
 3. In cmd line do: ``cd tense_verben_lernen`` or go to the folder: \tense_verben_lernen
 4. Click on ``installer.bat``, you may need to run it as administrator (the installer will install all requirements and executable)
 5. After the installation, please follow this path to find the application executable ``.\dist\VerbenLernen\VerbenLernen.exe``
