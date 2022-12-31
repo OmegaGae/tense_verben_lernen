@@ -1,12 +1,5 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python3
-"""
- # @ Author: OmegaGae
- # @ Create Time: 2022-03-03 11:20:51
- # @ Modified by: OmegaGae
- # @ Modified time: 2022-03-03 12:11:31
- # @ Description: Ready for work !!
- """
 
 import random
 import tkinter as tk
@@ -32,6 +25,7 @@ from lib.windows import (
     GameConclusionTemplate,
     check_input,
 )
+from scripts import clean_file
 
 
 class HandlerTenseVerbs:
@@ -43,6 +37,9 @@ class HandlerTenseVerbs:
         :param max_game: Maximum game possible to play"""
 
         check_input([(file_name, str), (max_game, int)])
+
+        # clear data before manipulation
+        clean_file()
 
         self.file_name = file_name
         self.max_game = max_game

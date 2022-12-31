@@ -1,4 +1,10 @@
 """WINDOWS package"""
+# import sys
+# from pathlib import Path
+
+# path_test = Path(__file__).resolve().parents[1]
+# sys.path.append(str(path_test))
+
 from lib.windows.templates import (
     check_input,
     create_frame,

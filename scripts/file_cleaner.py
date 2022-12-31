@@ -1,12 +1,7 @@
 """ Cleaner for starke_unregelmäßie
 Delete from file: (,),*"""
 
-import sys
-from pathlib import Path
 from typing import Union
-
-path_test = Path(__file__).resolve().parents[1]
-sys.path.append(str(path_test))
 
 from lib.edit import PATH_TO_STARKE_UNREGELMEASSIE
 

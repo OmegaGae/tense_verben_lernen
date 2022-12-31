@@ -1,12 +1,7 @@
 #!/usr/bin/env python3
 
-import sys
 from pathlib import Path
-
 from typing import Optional, Union, List, Callable
-
-path_test = Path(__file__).resolve().parents[2]
-sys.path.append(str(path_test))
 
 import tkinter as tk
 from tkinter import ttk
@@ -117,12 +112,8 @@ def create_frame(
     :raise TypeError: Error raised when input type is different from expected type"""
 
     # check input
-    check_input((frame, ttk.Frame))
-
-    if not isinstance(tk_relief, (TkRelief, str)):
-        raise TypeError(
-            f"Your Input type:{type(tk_relief)}, is different from expected input type for tk_relief"
-        )
+    inputs_to_check = [(frame, ttk.Frame), (tk_relief, (TkRelief, str))]
+    check_input(inputs_to_check)
 
     frame = ttk.Frame(frame, relief=tk_relief)
     try:
@@ -167,20 +158,16 @@ def create_label(
     :raise TypeError: Error raised when input type is different from expected type"""
 
     # check input
-    inputs_to_check = [(frame, ttk.Frame), (text, str), (label_style, str)]
+    inputs_to_check = [
+        (frame, ttk.Frame),
+        (text, str),
+        (label_style, str),
+        (tk_relief, (TkRelief, str)),
+        (tk_anchor, (TkAnchorNSticky, str)),
+    ]
     check_input(inputs_to_check)
 
     # add check for size parameter ?
-
-    if not (isinstance(tk_relief, TkRelief) or isinstance(tk_relief, str)):
-        raise TypeError(
-            f"Your Input type:{type(tk_relief)}, is different from expected input type"
-        )
-
-    if not (isinstance(tk_anchor, TkAnchorNSticky) or isinstance(tk_anchor, str)):
-        raise TypeError(
-            f"Your Input type:{type(tk_anchor)}, is different from expected input type"
-        )
 
     tk_label = ttk.Label(
         frame,
@@ -239,23 +226,11 @@ def create_photo_label(
         (frame, ttk.Frame),
         (tk_photo, ImageTk.PhotoImage),
         (label_style, str),
+        (tk_anchor, (TkAnchorNSticky, str)),
+        (tk_compound, (TkSide, str)),
+        (tk_relief, (TkRelief, str)),
     ]
     check_input(inputs_to_check)
-
-    if not isinstance(tk_anchor, (TkAnchorNSticky, str)):
-        raise TypeError(
-            f"Your Input type:{type(tk_anchor)}, is different from expected input type"
-        )
-
-    if not isinstance(tk_compound, (TkSide, str)):
-        raise TypeError(
-            f"Your Input type:{type(tk_compound)}, is different from expected input type"
-        )
-
-    if not isinstance(tk_relief, (TkRelief, str)):
-        raise TypeError(
-            f"Your Input type:{type(tk_relief)}, is different from expected input type"
-        )
 
     # add check for size parameter ?... missing checks see later
 
@@ -323,13 +298,9 @@ def create_text(
         (tk_height, int),
         (fg_color, str),
         (bg_color, str),
+        (tk_state, (TkStates, str)),
     ]
     check_input(inputs_to_check)
-
-    if not (isinstance(tk_state, TkStates) or isinstance(tk_state, str)):
-        raise TypeError(
-            f"Your Input type:{type(tk_state)}, is different from expected input type"
-        )
 
     tk_text = tk.Text(
         frame, height=tk_height, width=tk_width, fg=fg_color, background=bg_color
@@ -439,20 +410,10 @@ def create_progress_bar(
         (interval_time, int),
         (incrementation_time, float),
         (stop_time, int),
+        (tk_orientation, (TkOrientation, str)),
+        (tk_mode, (TkMode, str)),
     ]
     check_input(inputs_to_check)
-
-    if not (
-        isinstance(tk_orientation, TkOrientation) or isinstance(tk_orientation, str)
-    ):
-        raise TypeError(
-            f"Your Input type:{type(tk_orientation)}, is different from expected input type"
-        )
-
-    if not (isinstance(tk_mode, TkMode) or isinstance(tk_mode, str)):
-        raise TypeError(
-            f"Your Input type:{type(tk_mode)}, is different from expected input type"
-        )
 
     tk_progress_bar = ttk.Progressbar(
         frame, orient=tk_orientation, mode=tk_mode, length=tk_length
@@ -595,6 +556,15 @@ class GamePresentationTemplate(ttk.Frame):
         :param heigth: (Optional) define the scrowling text box heigth. Default set to None
         :param fg_color: (Optiobal) Customized foregroung button color
         :param bg_color: (Optiobal) Customized backgroung button color"""
+        inputs_to_check = [
+            (frame, ttk.Frame),
+            (width, (int, type(None))),
+            (height, (int, type(None))),
+            (fg_color, str),
+            (bg_color, str),
+        ]
+        check_input(inputs_to_check)
+
         scrolling_text = ScrolledText(frame, width=width, height=height)
         scrolling_text.insert(tk.END, self.presentation_text)
         scrolling_text.pack(fill=tk.BOTH, side=tk.TOP, expand=True, padx=5)
@@ -621,6 +591,14 @@ class GamePresentationTemplate(ttk.Frame):
         :param fg_color: (Optiobal) Customized foregroung button color
         :param bg_color: (Optiobal) Customized backgroung button color"""
 
+        inputs_to_check = [
+            (frame, ttk.Frame),
+            (button_position, str),
+            (fg_color, str),
+            (bg_color, str),
+        ]
+        check_input(inputs_to_check)
+
         start_button = tk.Button(
             frame, text=start_text, command=func, fg=fg_color, bg=bg_color
         )
@@ -629,7 +607,8 @@ class GamePresentationTemplate(ttk.Frame):
     def template_launcher(self, frame_style: str = StyleNamesCustomized.tframe):
         """Default function to call to call the template window
         :param frame_style: (Optiobal) Customized style frame, see ttk.Style"""
-
+        inputs_to_check = (frame_style, str)
+        check_input(inputs_to_check)
         # create frames
         for nber in range(self._nber_frames):
             frame = create_frame(
@@ -699,7 +678,8 @@ class GamePageTemplate(ttk.Frame):
         :param infinitive_verb: Infinitive verb
         :param left_verb_nb: Number of left verb to find
         :param score: current score"""
-
+        inputs_to_check = [(infinitive_verb, str), (left_verb_nb, int), (score, int)]
+        check_input(inputs_to_check)
         # create frames
         for nber in range(self._nber_frames):
             frame = create_frame(
@@ -845,16 +825,14 @@ class GameStateTemplate(ttk.Frame):
         :param type_resize: See Image.Resampling. Default set to Resampling.LANCZOS
         :param text_to_display: Text to display alongside the image. Default set to success_text
         """
-
-        check_input(
-            [
-                (parent, ttk.Frame),
-                (img_path, str),
-                (resize_values, tuple),
-                (type_resize, Image.Resampling),
-                (text_to_display, str),
-            ]
-        )
+        inputs_to_check = [
+            (parent, ttk.Frame),
+            (img_path, str),
+            (resize_values, tuple),
+            (type_resize, Image.Resampling),
+            (text_to_display, str),
+        ]
+        check_input(inputs_to_check)
 
         self.parent = parent
 
@@ -906,6 +884,8 @@ class GameStateTemplate(ttk.Frame):
         """Default function to call to call the template window
 
         :param verb_to_find: current tense verb used in the game"""
+        inputs_to_check = (verb_to_find, dict)
+        check_input(inputs_to_check)
 
         for nber in range(self._nber_frames):
             frame = create_frame(
@@ -1055,6 +1035,8 @@ class GameConclusionTemplate(ttk.Frame):
     def template_launcher(self, score: int):
         """Default function to call to call the template window
         :param score: player score"""
+        inputs_to_check = (score, int)
+        check_input(inputs_to_check)
 
         _score = str(score) + "/20"
         # _end_score = score_text + _score # choice was to use label and text
