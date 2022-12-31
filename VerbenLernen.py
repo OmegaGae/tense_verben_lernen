@@ -39,7 +39,7 @@ class HandlerTenseVerbs:
         check_input([(file_name, str), (max_game, int)])
 
         # clear data before manipulation
-        clean_file()
+        # clean_file() # issue when using exec app to load starke_unregelmeassie.txt
 
         self.file_name = file_name
         self.max_game = max_game
