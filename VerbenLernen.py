@@ -6,9 +6,9 @@ import tkinter as tk
 from tkinter import ttk
 
 from typing import Dict, List
-from edit.editfile import Editfile
-from edit import STARKE_UNREGELMEASSIE
-from constant_values import (
+from lib.edit.editfile import Editfile
+from lib.edit import STARKE_UNREGELMEASSIE
+from lib.constant_values import (
     TenseKey,
     TkFilling,
     TkRelief,
@@ -17,7 +17,7 @@ from constant_values import (
     VlColors,
     StyleNamesCustomized,
 )
-from windows import (
+from lib.windows import (
     GamePresentationTemplate,
     GamePageTemplate,
     GameFailedTemplate,

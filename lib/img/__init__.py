@@ -1,10 +1,10 @@
 """Package for images"""
 
-import sys
-from pathlib import Path
+# import sys
+# from pathlib import Path
 
-path_test = Path(__file__).resolve().parents[2]
-sys.path.append(str(path_test))
+# path_test = Path(__file__).resolve().parents[2]
+# sys.path.append(str(path_test))
 
 PATH_TO_IMG = "./lib/img"
 PATH_TO_POSITIVE_SMILEY = "./lib/img/positive_smiley.png"
