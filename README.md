@@ -15,7 +15,7 @@ The game can be implemented for others languages to help user learn tense verbs 
 
 ### _current version_
 
-* v1.0.0 : The Application is executable. For more information please see [CHANGELOG](https://github.com/OmegaGae/tense_verben_lernen/blob/main/CHANGELOG.txt)
+* v1.0.0 : The Application is executable. For more information please see [CHANGELOG](https://github.com/OmegaGae/tense_verben_lernen/blob/main/CHANGELOG.md)
 
 ## Requirements
 
