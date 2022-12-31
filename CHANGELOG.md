@@ -18,7 +18,7 @@ ___
 
 # _**Versions: v1.0.0**_
 
-**This is the first release version, as the game is executable. Improvments have been since since the beta version**
+**This is the first release version, as the game is executable. Improvments have been done since the beta version**
 
 ## _Features_
 
