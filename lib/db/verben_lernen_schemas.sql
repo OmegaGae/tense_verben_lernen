@@ -19,12 +19,11 @@ CREATE TABLE VerbenLernen(
 
 -- Player table
 CREATE TABLE Player(
-    surname VARCHAR(30) DEFAULT('Unknown'),
+    surname VARCHAR(30),
     current_level VARCHAR(2) DEFAULT('Unknown'),
     last_score INT DEFAULT(0),
     PRIMARY KEY(surname)
-    
-)
+);
 
 -- data of VerbenLernen table
 INSERT INTO VerbenLernen(infinitive,present,perfect,auxiliary,preterit,level,english_definition) VALUES('beginnen', 'beginnt', 'begann', 'hat', 'begonnen', 'A1', 'to_begin');
