@@ -1,174 +1,174 @@
-beginnen beginnt begann hat begonnen A1
-bleiben bleibt blieb ist geblieben A1
-bringen bringt brachte hat gebracht A1
-denken denkt dachte hat gedacht A1
-dürfen darf durfte hat gedurft A1
-essen isst aß hat gegessen A1
-fahren fährt fuhr hat/ist gefahren A1
-fangen fängt fing hat gefangen A1
-finden findet fand hat gefunden A1
-fliegen fliegt flog hat/ist geflogen A1
-geben gibt gab hat gegeben A1
-gehen geht ging ist gegangen A1
-haben hat hatte hat gehabt A1
-heißen heißt hieß hat geheißen A1
-helfen hilft half hat geholfen A1
-kennen kennt kannte hat gekannt A1
-kommen kommt kam ist gekommen A1
-können kann konnte hat gekonnt A1
-lesen liest las hat gelesen A1
-mögen mag mochte hat gemocht A1
-müssen muss musste hat gemusst A1
-nehmen nimmt nahm hat genommen A1
-rufen ruft rief hat gerufen A1
-schlafen schläft schlief hat geschlafen A1
-schreiben schreibt schrieb hat geschrieben A1
-schwimmen schwimmt schwamm hat/ist geschwommen A1
-sehen sieht sah hat gesehen A1
-sein ist war ist gewesen A1
-singen singt sang hat gesungen A1
-sollen soll sollte hat gesollt A1
-sprechen spricht sprach hat gesprochen A1
-stehen steht stand hat gestanden A1
-treffen trifft traf hat getroffen A1
-trinken trinkt trank hat getrunken A1
-tun tut tat hat getan A1
-wissen weiß wusste hat gewusst A1
-wollen will wollte hat gewollt A1
-backen backt buk hat gebacken A2
-biegen biegt bog hat/ist gebogen A2
-bieten bietet bot hat geboten A2
-bitten bittet bat hat gebeten A2
-braten brät briet hat gebraten A2
-fallen fällt fiel ist gefallen A2
-gefallen gefällt gefiel hat gefallen A2
-gewinnen gewinnt gewann hat gewonnen A2
-laden lädt lud hat geladen A2
-laufen läuft lief ist gelaufen A2
-liegen liegt lag hat gelegen A2
-nennen nennt nannte hat genannt A2
-rennen rennt rannte ist gerannt A2
-riechen riecht roch hat gerochen A2
-schließen schließt schloss hat geschlossen A2
-sitzen sitzt saß hat gesessen A2
-steigen steigt stieg ist gestiegen A2
-sterben stirbt starb ist gestorben A2
-treiben treibt trieb hat/ist getrieben A2
-vergessen vergisst vergaß hat vergessen A2
-verlieren verliert verlor hat verloren A2
-wachsen wächst wuchs ist gewachsen A2
-waschen wäscht wusch hat gewaschen A2
-werden wird wurde ist geworden A2
-werfen wirft warf hat geworfen A2
-ziehen zieht zog hat/ist gezogen A2
-befehlen befiehlt befahl hat befohlen B1
-beißen beißt biss hat gebissen B1
-binden bindet band hat gebunden B1
-brechen bricht brach hat/ist gebrochen B1
-brennen brennt brannte hat gebrannt B1
-empfehlen empfiehlt empfahl hat empfohlen B1
-erschrecken erschrickt erschrak ist erschrocken B1
-fliehen flieht floh ist geflohen B1
-fließen fließt floss ist geflossen B1
-fressen frisst fraß hat gefressen B1
-frieren friert fror hat/ist gefroren B1
-gelingen gelingt gelang ist gelungen B1
-gelten gilt galt hat gegolten B1
-genießen genießt genoss hat genossen B1
-geschehen geschieht geschah ist geschehen B1
-gießen gießt goss hat gegossen B1
-gleichen gleicht glich hat geglichen B1
-graben gräbt grub hat gegraben B1
-greifen greift griff hat gegriffen B1
-halten hält hielt hat gehalten B1
-hängen hängt hing hat gehangen B1
-heben hebt hob hat gehoben B1
-klingen klingt klang hat geklungen B1
-lassen lässt ließ hat gelassen B1
-leiden leidet litt hat gelitten B1
-leihen leiht lieh hat geliehen B1
-lügen lügt log hat gelogen B1
-meiden meidet mied hat gemieden B1
-messen misst maß hat gemessen B1
-raten rät riet hat geraten B1
-reiben reibt rieb hat gerieben B1
-reiten reitet ritt hat/ist geritten B1
-schaffen schafft schuf hat geschaffen B1
-scheiden scheidet schied hat/ist geschieden B1
-scheinen scheint schien hat geschienen B1
-scheißen scheißt schiss hat geschissen B1
-schieben schiebt schob hat geschoben B1
-schießen schießt schoss hat/ist geschossen B1
-schlagen schlägt schlug hat geschlagen B1
-schmeißen schmeißt schmiss hat geschmissen B1
-schneiden schneidet schnitt hat geschnitten B1
-schreien schreit schrie hat geschrien B1
-senden sendet sandte hat gesandt B1
-sinken sinkt sank ist gesunken B1
-springen springt sprang ist gesprungen B1
-stehlen stiehlt stahl hat gestohlen B1
-stinken stinkt stank hat gestunken B1
-streiten streitet stritt hat gestritten B1
-tragen trägt trug hat getragen B1
-treten tritt trat hat/ist getreten B1
-trügen trügt trog hat getrogen B1
-verzeihen verzeiht verzieh hat verziehen B1
-weisen weist wies hat gewiesen B1
-werben wirbt warb hat geworben B1
-wiegen wiegt wog hat gewogen B1
-zwingen zwingt zwang hat gezwungen B1
-bergen birgt barg hat geborgen B2
-blasen bläst blies hat geblasen B2
-gebären gebärt gebar hat geboren B2
-pfeifen pfeift pfiff hat gepfiffen B2
-reißen reißt riss hat gerissen B2
-ringen ringt rang hat gerungen B2
-saufen säuft soff hat gesoffen B2
-schmelzen schmilzt schmolz hat/ist geschmolzen B2
-schreiten schreitet schritt ist geschritten B2
-schweigen schweigt schwieg hat geschwiegen B2
-schwellen schwillt schwoll ist geschwollen B2
-schwinden schwindet schwand ist geschwunden B2
-schwören schwört schwor hat geschworen B2
-spinnen spinnt spann hat gesponnen B2
-stechen sticht stach hat gestochen B2
-stoßen stößt stieß hat/ist gestoßen B2
-streichen streicht strich hat/ist gestrichen B2
-verderben verdirbt verdarb hat/ist verdorben B2
-weichen weicht wich ist gewichen B2
-wenden wendet wandte hat gewandt B2
-winden windet wand hat gewunden B2
-bewegen bewegt bewog hat bewogen C1
-dringen dringt drang hat/ist gedrungen C1
-erlöschen erlischt erlosch ist erloschen C1
-fechten ficht focht hat gefochten C1
-gedeihen gedeiht gedieh ist gediehen C1
-genesen genest genas ist genesen C1
-gleiten gleitet glitt ist geglitten C1
-klimmen klimmt klomm ist geklommen C1
-kneifen kneift kniff hat gekniffen C1
-kriechen kriecht kroch ist gekrochen C1
-melken melkt molk hat gemolken C1
-preisen preist pries hat gepriesen C1
-quellen quillt quoll ist gequollen C1
-rinnen rinnt rann ist geronnen C1
-saugen saugt sog hat gesogen C1
-schleichen schleicht schlich ist geschlichen C1
-schleifen schleift schliff hat geschliffen C1
-schlingen schlingt schlang hat geschlungen C1
-schwingen schwingt schwang hat/ist geschwungen C1
-sinnen sinnt sann hat gesonnen C1
-sprießen sprießt spross ist gesprossen C1
-wringen wringt wrang hat gewrungen C1
-bersten birst barst ist geborsten C2
-bleichen bleicht blich ist geblichen C2
-dreschen drischt drosch hat gedroschen C2
-flechten flicht flocht hat geflochten C2
-glimmen glimmt glomm hat geglommen C2
-hauen haut hieb hat gehauen C2
-schelten schilt schalt hat gescholten C2
-scheren schert schor hat geschoren C2
-speien speit spie hat gespien C2
-stieben stiebt stob hat/ist gestoben C2
-verdrießen verdrießt verdross hat verdrossen C2
-weben webt wob hat gewoben C2
+beginnen beginnt begann hat begonnen A1 to_begin
+bleiben bleibt blieb ist geblieben A1 to_stay
+bringen bringt brachte hat gebracht A1 to_stay
+denken denkt dachte hat gedacht A1 to_think
+dürfen darf durfte hat gedurft A1 to_be_allowed
+essen isst aß hat gegessen A1 to_eat
+fahren fährt fuhr hat/ist gefahren A1 to_drive
+fangen fängt fing hat gefangen A1 to_catch
+finden findet fand hat gefunden A1 to_find
+fliegen fliegt flog hat/ist geflogen A1 to_fly
+geben gibt gab hat gegeben A1 to_give
+gehen geht ging ist gegangen A1 to_go
+haben hat hatte hat gehabt A1 to_have
+heißen heißt hieß hat geheißen A1 to_be_called
+helfen hilft half hat geholfen A1 to_help
+kennen kennt kannte hat gekannt A1 to_know_(be_familiar_with)
+kommen kommt kam ist gekommen A1 to_come
+können kann konnte hat gekonnt A1 to_be_able_(can)
+lesen liest las hat gelesen A1 to_read
+mögen mag mochte hat gemocht A1 to_like
+müssen muss musste hat gemusst A1 to_have_to_(must)
+nehmen nimmt nahm hat genommen A1 to_take
+rufen ruft rief hat gerufen A1 to_call
+schlafen schläft schlief hat geschlafen A1 to_sleep
+schreiben schreibt schrieb hat geschrieben A1 to_write
+schwimmen schwimmt schwamm hat/ist geschwommen A1 to_swim
+sehen sieht sah hat gesehen A1 to_see
+sein ist war ist gewesen A1 to_be
+singen singt sang hat gesungen A1 to_sing
+sollen soll sollte hat gesollt A1 to_ought_to_(should)
+sprechen spricht sprach hat gesprochen A1 to_speak
+stehen steht stand hat gestanden A1 to_stand
+treffen trifft traf hat getroffen A1 to_meet
+trinken trinkt trank hat getrunken A1 to_drink
+tun tut tat hat getan A1 to_do
+wissen weiß wusste hat gewusst A1 to_know_(a_fact)
+wollen will wollte hat gewollt A1 to_want
+backen backt buk hat gebacken A2 to_bake
+biegen biegt bog hat/ist gebogen A2 to_bend
+bieten bietet bot hat geboten A2 to_offer
+bitten bittet bat hat gebeten A2 to_request
+braten brät briet hat gebraten A2 to_fry
+fallen fällt fiel ist gefallen A2 to_fall
+gefallen gefällt gefiel hat gefallen A2 to_like,_to_please_(most_used),_to_favour
+gewinnen gewinnt gewann hat gewonnen A2 to_win
+laden lädt lud hat geladen A2 to_load,_to_download
+laufen läuft lief ist gelaufen A2 to_run,_to_walk
+liegen liegt lag hat gelegen A2 to_lie_(lie_down)
+nennen nennt nannte hat genannt A2 to_name,_to_call
+rennen rennt rannte ist gerannt A2 to_run
+riechen riecht roch hat gerochen A2 to_smell
+schließen schließt schloss hat geschlossen A2 to_close
+sitzen sitzt saß hat gesessen A2 to_sit
+steigen steigt stieg ist gestiegen A2 to_climb_(to_get_in),_to_mount
+sterben stirbt starb ist gestorben A2 to_die
+treiben treibt trieb hat/ist getrieben A2 to_compel,_to_drive
+vergessen vergisst vergaß hat vergessen A2 to_forget
+verlieren verliert verlor hat verloren A2 to_lose
+wachsen wächst wuchs ist gewachsen A2 to_grow
+waschen wäscht wusch hat gewaschen A2 to_wash
+werden wird wurde ist geworden A2 to_become
+werfen wirft warf hat geworfen A2 to_throw
+ziehen zieht zog hat/ist gezogen A2 to_pull,_to_move
+befehlen befiehlt befahl hat befohlen B1 to_command
+beißen beißt biss hat gebissen B1 to_bite
+binden bindet band hat gebunden B1 to_bind
+brechen bricht brach hat/ist gebrochen B1 to_break
+brennen brennt brannte hat gebrannt B1 to_burn
+empfehlen empfiehlt empfahl hat empfohlen B1 to_recommend
+erschrecken erschrickt erschrak ist erschrocken B1 to_frighten,_to_be_startled
+fliehen flieht floh ist geflohen B1 to_flee
+fließen fließt floss ist geflossen B1 to_flow
+fressen frisst fraß hat gefressen B1 to_devour_(eat_for_animals)
+frieren friert fror hat/ist gefroren B1 to_freeze
+gelingen gelingt gelang ist gelungen B1 to_be_successful
+gelten gilt galt hat gegolten B1 to_pertain
+genießen genießt genoss hat genossen B1 to_enjoy
+geschehen geschieht geschah ist geschehen B1 to_happen
+gießen gießt goss hat gegossen B1 to_pour
+gleichen gleicht glich hat geglichen B1 to_resemble
+graben gräbt grub hat gegraben B1 to_dig
+greifen greift griff hat gegriffen B1 to_grasp
+halten hält hielt hat gehalten B1 to_hold,_to_stop
+hängen hängt hing hat gehangen B1 to_hang
+heben hebt hob hat gehoben B1 to_lift
+klingen klingt klang hat geklungen B1 to_sound_(it_sounds_good),_to_ring
+lassen lässt ließ hat gelassen B1 to_let
+leiden leidet litt hat gelitten B1 to_suffer
+leihen leiht lieh hat geliehen B1 to_lend,_to_borrow
+lügen lügt log hat gelogen B1 to_lie_(tell_a_falsehood)
+meiden meidet mied hat gemieden B1 to_avoid
+messen misst maß hat gemessen B1 to_measure
+raten rät riet hat geraten B1 to_guess,_to_advise
+reiben reibt rieb hat gerieben B1 to_rub
+reiten reitet ritt hat/ist geritten B1 to_ride
+schaffen schafft schuf hat geschaffen B1 to_create,_to_manage
+scheiden scheidet schied hat/ist geschieden B1 to_separate
+scheinen scheint schien hat geschienen B1 to_shine,_to_seem
+scheißen scheißt schiss hat geschissen B1 to_shit
+schieben schiebt schob hat geschoben B1 to_push
+schießen schießt schoss hat/ist geschossen B1 to_shoot
+schlagen schlägt schlug hat geschlagen B1 to_hit,_to_strike
+schmeißen schmeißt schmiss hat geschmissen B1 to_throw,_to_fling
+schneiden schneidet schnitt hat geschnitten B1 to_cut
+schreien schreit schrie hat geschrien B1 to_scream,_to_cry
+senden sendet sandte hat gesandt B1 to_send
+sinken sinkt sank ist gesunken B1 to_sink
+springen springt sprang ist gesprungen B1 to_jump
+stehlen stiehlt stahl hat gestohlen B1 to_steal
+stinken stinkt stank hat gestunken B1 to_stink
+streiten streitet stritt hat gestritten B1 to_quarrel
+tragen trägt trug hat getragen B1 to_carry,_to_wear
+treten tritt trat hat/ist getreten B1 to_step
+trügen trügt trog hat getrogen B1 to_deceive
+verzeihen verzeiht verzieh hat verziehen B1 to_forgive
+weisen weist wies hat gewiesen B1 to_indicate
+werben wirbt warb hat geworben B1 to_advertise
+wiegen wiegt wog hat gewogen B1 to_weigh,_to_cradle
+zwingen zwingt zwang hat gezwungen B1 to_force
+bergen birgt barg hat geborgen B2 to_rescue
+blasen bläst blies hat geblasen B2 to_blow
+gebären gebärt gebar hat geboren B2 to_bear_(to_give_birth)
+pfeifen pfeift pfiff hat gepfiffen B2 to_whistle
+reißen reißt riss hat gerissen B2 to_rip
+ringen ringt rang hat gerungen B2 to_struggle
+saufen säuft soff hat gesoffen B2 to_guzzle,_to_tipple
+schmelzen schmilzt schmolz hat/ist geschmolzen B2 to_melt
+schreiten schreitet schritt ist geschritten B2 to_stride,_to_step
+schweigen schweigt schwieg hat geschwiegen B2 to_be_silent
+schwellen schwillt schwoll ist geschwollen B2 to_swell
+schwinden schwindet schwand ist geschwunden B2 to_fade,_to_disappear
+schwören schwört schwor hat geschworen B2 to_swear
+spinnen spinnt spann hat gesponnen B2 to_spin,_to_be_crazy
+stechen sticht stach hat gestochen B2 to_stab,_to_prick
+stoßen stößt stieß hat/ist gestoßen B2 to_bump
+streichen streicht strich hat/ist gestrichen B2 to_cancel,_to_delete
+verderben verdirbt verdarb hat/ist verdorben B2 to_spoil
+weichen weicht wich ist gewichen B2 to_yield,_to_give_way
+wenden wendet wandte hat gewandt B2 to_turn,_to_appeal_to
+winden windet wand hat gewunden B2 to_wind
+bewegen bewegt bewog hat bewogen C1 to_move
+dringen dringt drang hat/ist gedrungen C1 to_get_through
+erlöschen erlischt erlosch ist erloschen C1 to_expire
+fechten ficht focht hat gefochten C1 to_fence
+gedeihen gedeiht gedieh ist gediehen C1 to_thrive
+genesen genest genas ist genesen C1 to_recover
+gleiten gleitet glitt ist geglitten C1 to_glide
+klimmen klimmt klomm ist geklommen C1 to_climb
+kneifen kneift kniff hat gekniffen C1 to_pinch
+kriechen kriecht kroch ist gekrochen C1 to_crawl
+melken melkt molk hat gemolken C1 to_milk
+preisen preist pries hat gepriesen C1 to_praise
+quellen quillt quoll ist gequollen C1 to_well
+rinnen rinnt rann ist geronnen C1 to_trickle
+saugen saugt sog hat gesogen C1 to_suck,_to_vacuum
+schleichen schleicht schlich ist geschlichen C1 to_sneak
+schleifen schleift schliff hat geschliffen C1 to_grind
+schlingen schlingt schlang hat geschlungen C1 to_loop,_to_gulp
+schwingen schwingt schwang hat/ist geschwungen C1 to_sway,_to_wield
+sinnen sinnt sann hat gesonnen C1 to_ponder
+sprießen sprießt spross ist gesprossen C1 to_sprout
+wringen wringt wrang hat gewrungen C1 to_wring
+bersten birst barst ist geborsten C2 to_burst
+bleichen bleicht blich ist geblichen C2 to_bleach
+dreschen drischt drosch hat gedroschen C2 to_thrash
+flechten flicht flocht hat geflochten C2 to_weave
+glimmen glimmt glomm hat geglommen C2 to_glow
+hauen haut hieb hat gehauen C2 to_hit
+schelten schilt schalt hat gescholten C2 to_scold
+scheren schert schor hat geschoren C2 to_shear
+speien speit spie hat gespien C2 to_spit
+stieben stiebt stob hat/ist gestoben C2 to_fly,_to_spray
+verdrießen verdrießt verdross hat verdrossen C2 to_irritate,_to_annoy
+weben webt wob hat gewoben C2 to_weave

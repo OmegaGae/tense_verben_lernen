@@ -192,3 +192,7 @@ class TkMode(str, Enum):
 
     DETERMINATE = "determinate"
     INDETERMINATE = "indeterminate"
+
+
+class Queries(str, Enum):
+    """Find here all SQL commands supported by VerbenLernen"""
