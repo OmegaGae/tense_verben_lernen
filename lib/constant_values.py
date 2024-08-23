@@ -196,3 +196,7 @@ class TkMode(str, Enum):
 
 class Queries(str, Enum):
     """Find here all SQL commands supported by VerbenLernen"""
+    USE = "USE "
+    DROP_DB = "DROP DATABASE "
+    SHOW_DB = "SHOW DATABASES "
+    CREATE_TABLE = "CREATE TABLE "
