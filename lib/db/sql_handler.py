@@ -3,7 +3,7 @@ import logging
 import re
 
 from mysql.connector import MySQLConnection, Error as MySqlError
-from typing import Optional, Tuple, Any
+from typing import Optional, Tuple, Union, List, Any
 
 from lib.constant_values import Queries
 
@@ -80,6 +80,7 @@ class SqlHandler:
             self._is_connected_to_server = False
             self._is_connected_to_db = False
 
+    @connected
     def connect_to_db(self):
         """Connect to the given database
         As done with sql command: USE <data_base_name>
@@ -95,7 +96,7 @@ class SqlHandler:
             self._is_connected_to_db = False
 
     def check_query(self, query_cmd:str)->Tuple[bool,int]:
-        """Check whether the current query is well written
+        """Check whether the current query is well written.
         The check will only verified if the query end with one delimiter ';'
 
         :param query_cmd: Sql request to send to server
@@ -115,20 +116,27 @@ class SqlHandler:
         # All roads not True lead to False
         return False, nb_of_comma_found
 
-    @connected
+    @connected(is_connected_db_to_check=True)
     def create_table(self, table:str)->bool:
-        """Create a table in the current active database
+        """Create a table in the current active database, just as in sql language
 
         e.g: 
-        CREATE TABLE VerbenLernen(...) is equivalent of the example below:
+            sql'CREATE TABLE VerbenLernen(...);' is equivalent of the example below:
 
-        >>> table = "VerbenLernen(
-                number INT AUTO_INCREMENT,
-                infinitive VARCHAR(30) NOT NULL,
-                present VARCHAR(30) NOT NULL,
-                PRIMARY KEY(number)
-            );"
-        >>> create_table(table)
+            >>> table = "VerbenLernen(
+                    number INT AUTO_INCREMENT,
+                    infinitive VARCHAR(30) NOT NULL,
+                    present VARCHAR(30) NOT NULL,
+                    PRIMARY KEY(number)
+                );"
+            >>> create_table(table)
+
+            Also supported:
+
+            >>> table= "CREATE TABLE VerbenLernen(...);"
+            >>> create_table(table)
+
+        ..Note: If delimiter is forgotten, it will be added and query executed
 
         :param table: Table name and data to use as a query create table
         :return: True If query executed successfully otherwise False
@@ -136,24 +144,29 @@ class SqlHandler:
         # TODO: check typing
         # get cursor
         cursor = self._connection_link.cursor()
-        # check table
+        # check data_to_insert
         result, number_comma_found = self.check_query(table)
-        if result:
-            try:
-                query = Queries.CREATE_TABLE.value + table
-                cursor.execute(query)
-                self._connection_link.commit()
-                sql_log.info("Query executed successfully")
-            except MySqlError as sql_err:
-                sql_log.info(f"Could not execute query due to following error: {sql_err}")
-                return False
+
+        # set query depending of the input and result
+        if Queries.CREATE_TABLE.value in table:
+            if result:
+                query = table
+            else:
+                # we suppose that ";" was forgotten at the end
+                query = table + ";"
         else:
-            if number_comma_found != 0:
-                sql_log.exception("We only support ONE query per command, no more or sub queries in query")
-                raise ValueError(f"Not supported query: {table}")
-            try:
+            if result:
+                query = Queries.CREATE_TABLE.value + table
+            else:
                 # we suppose that ";" was forgotten at the end
                 query = Queries.CREATE_TABLE.value + table + ";"
+        
+        
+        if number_comma_found > 1: # More than one comma found
+            sql_log.exception("We only support ONE query per command, no more or sub queries in query")
+            raise ValueError(f"Not supported query: {table}")
+        else:
+            try:
                 cursor.execute(query)
                 self._connection_link.commit()
                 sql_log.info("Query executed successfully")
@@ -162,10 +175,68 @@ class SqlHandler:
                 return False
         return True
 
-    def insert_into(self): ...
+    @connected(is_connected_db_to_check=True)
+    def insert_into(self, data_to_insert=str)->bool:
+        """Execute an insert command just as done in sql language
 
-    def show_db(self):
-        """Show current existing database  in the current connection
+        :e.g:
+            - in sql language: INSERT INTO TableName(...) VALUES('AAA', 'BBB'...);
+            this sql command is equivalent of the example below:
+            >>> data_to_insert = "VerbenLernen(
+                    number INT AUTO_INCREMENT,
+                    infinitive VARCHAR(30) NOT NULL,
+                    present VARCHAR(30) NOT NULL,
+                    PRIMARY KEY(number)
+                ) VALUES('beginnen', 'beginnt');"
+            >>> insert_into(data_to_insert)
+
+            Also supported:
+            
+            >>> data_to_insert= "INSERT INTO TableName(...) VALUES('AAA', 'BBB'...);"
+            >>> insert_into(data_to_insert)
+
+        ..Note: If delimiter is forgotten, it will be added and query executed
+
+        :param data_to_insert: Give only the data to insert and not the all insert query
+        :return: True If query executed successfully otherwise False
+        """
+        # TODO: check typing
+        # get cursor
+        cursor = self._connection_link.cursor()
+        # check data_to_insert
+        result, number_comma_found = self.check_query(data_to_insert)
+
+        # set query depending of the input and result
+        if Queries.INSERT_INTO.value in data_to_insert:
+            if result:
+                query = data_to_insert
+            else:
+                # we suppose that ";" was forgotten at the end
+                query = data_to_insert + ";"
+        else:
+            if result:
+                query = Queries.INSERT_INTO.value + data_to_insert
+            else:
+                # we suppose that ";" was forgotten at the end
+                query = Queries.INSERT_INTO.value + data_to_insert + ";"
+        
+        
+        if number_comma_found > 1: # More than one comma found
+            sql_log.exception("We only support ONE query per command, no more or sub queries in query")
+            raise ValueError(f"Not supported query: {data_to_insert}")
+        else:
+            try:
+                cursor.execute(query)
+                self._connection_link.commit()
+                sql_log.info("Query executed successfully")
+            except MySqlError as sql_err:
+                sql_log.info(f"Could not execute query due to following error: {sql_err}")
+                return False
+        return True
+
+    @connected(is_connected_db_to_check=True)
+    def show_db(self)->Union[List[Any], bool]:
+        """Show current existing database in the current connection
 
         from sql command, e.g:
             > SHOW DATABASES;
@@ -177,31 +248,88 @@ class SqlHandler:
             | database C       |
             +------------------+
 
-        :return :"""
+        :return : list of databases or False if error occurred during command execution"""
+        # get cursor
+        cursor = self._connection_link.cursor()
+        # get query
+        query = Queries.SHOW_DB.value + ";"
+        
+        try:
+            cursor.execute(query)
+            databases = cursor.fetchall()
+            sql_log.info("Query executed successfully")
+        except MySqlError as sql_err:
+            sql_log.info(f"Could not execute query due to following error: {sql_err}")
+            return False
+        
+        return databases
 
-    def describe_table(self, name_table: str):
-        """Show the all contain of a table
+    @connected(is_connected_db_to_check=True)
+    def describe_table(self, table_name: str)->Union[List[Any], bool]:
+        """Show the characteristics of each element of the table just as the sql command
 
         from sql command, e.g:
-            > DESCRIBE table_to_desc;
+            > DESCRIBE table_to_describe;
+            +-------------------------------------------+
+            |  Field     |  Type         |  Null  |  ...
+            +-------------------------------------------+
+            | student id |  int          |  NO    |  ...
+            | name       |  varchar(20)  |  NO    |  ...
+            | major      |  varchar(20)  |  NO    |  ...
+            +-------------------------------------------+
 
-        :param name_table: Name of the table to describe/display
-        :param return:"""
+        :param table_name: Name of the table to describe/display
+        :param return: list of characteristics of the given table 
+        or False if an error occurred during command execution"""
+        # get cursor
+        cursor = self._connection_link.cursor()
+        # get query
+        query = Queries.DESCRIBE.value + table_name + ";"
+        
+        try:
+            cursor.execute(query)
+            characteristics = cursor.fetchall()
+            sql_log.info("Query executed successfully")
+        except MySqlError as sql_err:
+            sql_log.info(f"Could not execute query due to following error: {sql_err}")
+            return False
+        
+        return characteristics
+    
+    def select_any_from_any(self, items_to_select:str, table_of_selection:str, other_cmds_after_from_cmd:str=None)->Union[List[Any],bool]:
+        """Select any element/item in the chosen table. Function work as the sql command 'SELECT'
 
+        :e.g:
+            - in sql language: 'SELECT * FROM VerbenLernen WHERE infinitive=bleiben;'
+            this sql command is equivalent of the example below:
+
+            >>> select_any_from_any('*','VerbenLernen','WHERE infinitive=bleiben')
+
+        :param items_to_select: Give item to select in the table
+        :param table_of_selection: Table where to find the item of selection
+        :param other_cmds_after_from_cmd: other SQL commands as 'WHERE condition' as should be in the query, defaults to None
+        :return: List of element selected in the table or False if an error occurred during command execution
+        """
+
+    @connected(is_connected_db_to_check=True)
     def alter_table(
         self, table_name: str, command: str, item_name: str, value: Optional[Any]
     ):
         """Alter item directly in the table"""
 
+    @connected(is_connected_db_to_check=True)
     def drop_table(self, table_name: str):
         """Drop a table from current database on run"""
 
+    @connected
     def use_db(self, db_name: str):
         """Select the database to use during the session"""
 
+    @connected
     def create_db(self, db_name: str):
         """Create a database into server"""
 
+    @connected
     def drop_db(self, db_name: str):
         """Delete a database from server"""
     
