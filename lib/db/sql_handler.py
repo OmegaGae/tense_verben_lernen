@@ -281,6 +281,7 @@ class SqlHandler:
         :param table_name: Name of the table to describe/display
         :param return: list of characteristics of the given table 
         or False if an error occurred during command execution"""
+        #TODO:pydantic
         # get cursor
         cursor = self._connection_link.cursor()
         # get query
@@ -290,6 +291,7 @@ class SqlHandler:
             cursor.execute(query)
             characteristics = cursor.fetchall()
             sql_log.info("Query executed successfully")
+            assert cursor.close(), f"Cursor could not be closed successfully"
         except MySqlError as sql_err:
             sql_log.info(f"Could not execute query due to following error: {sql_err}")
             return False
@@ -312,14 +314,30 @@ class SqlHandler:
         """
 
     @connected(is_connected_db_to_check=True)
-    def alter_table(
-        self, table_name: str, command: str, item_name: str, value: Optional[Any]
-    ):
-        """Alter item directly in the table"""
+    def drop_table(self, table_name: str)->bool:
+        """Drop a table from current database on run, just as SQL command 'DROP TABLE'
+        
+        from sql command, e.g:
+            > DROP TABLE table_name;
 
-    @connected(is_connected_db_to_check=True)
-    def drop_table(self, table_name: str):
-        """Drop a table from current database on run"""
+        :param table_name: Table in the current database in run, to drop
+        :return: True if command executed successfully otherwise False
+        """
+        # TODO:pydantic
+        # get cursor
+        cursor = self._connection_link.cursor()
+        # get query
+        query = Queries.DROP_TABLE.value + table_name + ";"
+        
+        try:
+            cursor.execute(query)
+            self._connection_link.commit()
+            sql_log.info("Query executed successfully")
+        except MySqlError as sql_err:
+            sql_log.info(f"Could not execute query due to following error: {sql_err}")
+            return False
+        
+        return True
 
     @connected
     def use_db(self, db_name: str):
@@ -332,6 +350,13 @@ class SqlHandler:
     @connected
     def drop_db(self, db_name: str):
         """Delete a database from server"""
+    
+    @connected(is_connected_db_to_check=True)
+    def create_view(self)->bool:
+        ...
+    
+    def disconnect_server(self)->bool:
+        ...
     
     def __enter__(self):
         """..."""

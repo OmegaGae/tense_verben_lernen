@@ -202,3 +202,4 @@ class Queries(str, Enum):
     CREATE_TABLE = "CREATE TABLE "
     INSERT_INTO = "INSERT INTO "
     DESCRIBE = "DESCRIBE "
+    DROP_TABLE = "DROP TABLE "
