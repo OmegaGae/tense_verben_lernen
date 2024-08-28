@@ -352,7 +352,10 @@ class SqlHandler:
 
         :param table_name: Name of the table to describe/display
         :param return: list of characteristics of the given table 
-        or False if an error occurred during command execution"""
+        or False if an error occurred during command execution
+        :raises ValueError: Error raised when there is more than 1 query in a query as
+            multi-queries/sub-queries in a query, are not supported
+        """
         #TODO:pydantic
         # get cursor
         cursor = self._connection_link.cursor()
@@ -440,6 +443,8 @@ class SqlHandler:
 
         :param table_name: Table in the current database in run, to drop
         :return: True if command executed successfully otherwise False
+        :raises ValueError: Error raised when there is more than 1 query in a query as
+            multi-queries/sub-queries in a query, are not supported
         """
         # TODO:pydantic
         # get cursor
@@ -491,6 +496,8 @@ class SqlHandler:
 
         :param db_name: Name of the database to switch to
         :return: True if the command was successfully executed otherwise False
+        :raises ValueError: Error raised when there is more than 1 query in a query as
+            multi-queries/sub-queries in a query, are not supported
         """
         # TODO:pydantic
         cursor = self._connection_link.cursor()
@@ -544,6 +551,8 @@ class SqlHandler:
 
         :param db_name: Database name to use as a query
         :return: True If query executed successfully otherwise False
+        :raises ValueError: Error raised when there is more than 1 query in a query as
+            multi-queries/sub-queries in a query, are not supported
         """
         # TODO: check typing
         # get cursor
@@ -597,6 +606,8 @@ class SqlHandler:
 
         :param db_name: Database name to delete
         :return: True if command executed successfully otherwise False
+        :raises ValueError: Error raised when there is more than 1 query in a query as
+            multi-queries/sub-queries in a query, are not supported
         """
         # TODO:pydantic
         # get cursor
