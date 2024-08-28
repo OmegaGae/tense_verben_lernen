@@ -12,7 +12,7 @@ from lib.constant_values import Queries
 sql_log = logging.getLogger(__file__)
 
 
-# this library will use pydantic to make sure that typing are respected
+# this library will use Pydantic to make sure that typing are respected
 class SqlHandler:
     """Object that help to interact directly with SQL database by doing
     different type of Queries."""
@@ -30,6 +30,7 @@ class SqlHandler:
         :param is_connected_db_to_check: Enable flag if connection to database need to be checked, defaults to False
         :return: Wrap function result, as link to this class, should be True if everything went well otherwise False or None
         """
+        #TODO: check type with Pydantic only if python 3.8+
         # To not loose documentation, module name and annotation information of func through is_connected
         @functools.wraps(func)
         def is_connected(self, *args, **kwargs)-> Union[List[Any], bool, None]:
@@ -70,7 +71,7 @@ class SqlHandler:
         :param port: communication port to use to communicate with the server, defaults to 3306
         :param db_name: Name of the database, defaults to "VerbenLernen"
         """
-        # TODO: check typing
+        # TODO: check typing with Pydantic only if python 3.8+
         self.host_name = host_name # IP address of the host
         self.user_name = user_name
         self.password = password
@@ -151,7 +152,7 @@ class SqlHandler:
         :param query_cmd: Sql request to send to server
         :return: True if check passed otherwise False, and number of semicolon found
         """
-        # TODO: check typing
+        # TODO: check typing with Pydantic only if python 3.8+
         filter_end_semicolon= ";$"
         filter_semicolon= ";"
         nb_of_semicolon_found = 0
@@ -197,7 +198,7 @@ class SqlHandler:
         :raises ValueError: Error raised when there is more than 1 query in a query as
             multi-queries/sub-queries in a query, are not supported
         """
-        # TODO: check typing
+        # TODO: check typing with Pydantic only if python 3.8+
         # get cursor
         cursor = self._connection_link.cursor()
         # check data_to_insert
@@ -263,7 +264,7 @@ class SqlHandler:
         :raises ValueError: Error raised when there is more than 1 query in a query as
             multi-queries/sub-queries in a query, are not supported
         """
-        # TODO: check typing
+        # TODO: check typing with Pydantic only if python 3.8+
         # get cursor
         cursor = self._connection_link.cursor()
         # check data_to_insert
@@ -356,7 +357,7 @@ class SqlHandler:
         :raises ValueError: Error raised when there is more than 1 query in a query as
             multi-queries/sub-queries in a query, are not supported
         """
-        #TODO:pydantic
+        #TODO:check typing with Pydantic only if python 3.8+
         # get cursor
         cursor = self._connection_link.cursor()
         
@@ -408,7 +409,7 @@ class SqlHandler:
         :param other_cmds_after_from_cmd: other SQL commands as 'WHERE condition' as should be in the query, defaults to None
         :return: List of element selected in the table or False if an error occurred during command execution
         """
-        #TODO:pydantic
+        #TODO:check typing with Pydantic only if python 3.8+
         # get cursor
         cursor = self._connection_link.cursor()
         # get query
@@ -446,7 +447,7 @@ class SqlHandler:
         :raises ValueError: Error raised when there is more than 1 query in a query as
             multi-queries/sub-queries in a query, are not supported
         """
-        # TODO:pydantic
+        # TODO:check typing with Pydantic only if python 3.8+
         # get cursor
         cursor = self._connection_link.cursor()
 
@@ -499,7 +500,7 @@ class SqlHandler:
         :raises ValueError: Error raised when there is more than 1 query in a query as
             multi-queries/sub-queries in a query, are not supported
         """
-        # TODO:pydantic
+        # TODO:check typing with Pydantic only if python 3.8+
         cursor = self._connection_link.cursor()
 
         # check query
@@ -554,7 +555,7 @@ class SqlHandler:
         :raises ValueError: Error raised when there is more than 1 query in a query as
             multi-queries/sub-queries in a query, are not supported
         """
-        # TODO: check typing
+        # TODO: check typing with Pydantic only if python 3.8+
         # get cursor
         cursor = self._connection_link.cursor()
         # check query
@@ -609,7 +610,7 @@ class SqlHandler:
         :raises ValueError: Error raised when there is more than 1 query in a query as
             multi-queries/sub-queries in a query, are not supported
         """
-        # TODO:pydantic
+        # TODO:check typing with Pydantic only if python 3.8+
         # get cursor
         cursor = self._connection_link.cursor()
 
@@ -660,7 +661,7 @@ class SqlHandler:
         :param any_others_cmd: Any other command as example a condition for view to take items, such as 'WHERE condition=a'
         :return: True if command was successfully executed otherwise False
         """
-        # TODO: check typing
+        # TODO: check typing with Pydantic only if python 3.8+
         # get cursor
         cursor = self._connection_link.cursor()
         # get query
@@ -705,7 +706,7 @@ class SqlHandler:
         :param query: Any SQL query 
         :return: True if command was executed successfully otherwise False
         """
-        # TODO: check typing
+        # TODO: check typing with Pydantic only if python 3.8+
         # get cursor
         cursor = self._connection_link.cursor()
         try:
