@@ -1,9 +1,10 @@
 import mysql.connector
 import logging
+import functools
 import re
 
 from mysql.connector import MySQLConnection, Error as MySqlError
-from typing import Optional, Tuple, Union, List, Any
+from typing import Optional, Tuple, Union, List, Any, Callable
 
 from lib.constant_values import Queries
 
@@ -18,8 +19,35 @@ class SqlHandler:
 
     # decorator to make sure connection already created before any queries, if not 
     # it will create the connection
-    def connected(self):
-        """..."""
+    def connected(self, func:Callable, is_connected_db_to_check:bool=False)->None:
+        """Decorator to check whether before any SQL query on database, a connection to the server exist
+
+        ..Note: If connection to server or database does not exist but is needed, it will be created automatically using default value
+            given at the initialization of this class object.
+
+        :param is_connected_db_to_check: Enable flag if connection to database need to be checked, defaults to False
+        """
+
+        @functools.wraps(func)
+        def is_connected(self, *args, **kwargs):
+            """Decorator to check whether before any SQL query on database, a connection to the server exist
+
+            ..Note: If connection to server or database does not exist but is needed, it will be created automatically using default value
+                given at the initialization of this class object.
+
+            :param is_connected_db_to_check: Enable flag if connection to database need to be checked, defaults to False
+            """
+            # check server open
+            # check database open if requested
+            # execute function
+            results = func(args, kwargs)
+
+            return results
+    
+        return is_connected
+
+
+
 
     def __init__(
         self, host_name:Optional[str]="localhost", user_name: Optional[str]="root", password: Optional[str]="",port:Optional[int]=3306, db_name: Optional[str] = "VerbenLernen"
@@ -56,8 +84,10 @@ class SqlHandler:
     def connection_link(self)-> MySQLConnection:
         return self._connection_link
     
-    def connect_to_server(self)->None:
+    def connect_to_server(self)->bool:
         """Connect to the server, linked to this object
+
+        :return: True if the command was successfully executed otherwise False
         """
         try:
             self._connection_link = mysql.connector.connect(host=self.host_name,password=self.password,port=self.port, user=self.user_name)
@@ -66,9 +96,13 @@ class SqlHandler:
         except MySqlError as sql_err:
             sql_log.error(f"could not connect to server {self.user_name}, due to error: {sql_err}")
             self._is_connected_to_server = False
+            return False
+        return True
     
-    def connect_to_server_and_db(self)->None:
+    def connect_to_server_and_db(self)->bool:
         """Connect to the server and database, linked to this object
+        
+        :return: True if the command was successfully executed otherwise False
         """
         try:
             self._connection_link = mysql.connector.connect(host=self.host_name,password=self.password,port=self.port, user=self.user_name, database=self.db_name)
@@ -79,21 +113,27 @@ class SqlHandler:
             sql_log.error(f"could not connect to database {self.db_name}, due to error: {sql_err}")
             self._is_connected_to_server = False
             self._is_connected_to_db = False
+            return False
+        return True
 
     @connected
-    def connect_to_db(self):
+    def connect_to_db(self)->bool:
         """Connect to the given database
         As done with sql command: USE <data_base_name>
+
+        :return: True if the command was successfully executed otherwise False
         """
         cursor = self._connection_link.cursor()
-        query_to_use_db = Queries.USE.value + self.db_name
+        query = Queries.USE.value + self.db_name + ";"
         try:
-            cursor.execute(query_to_use_db)
+            cursor.execute(query)
             sql_log.info(f"Successfully connected to database: {self.db_name}")
             self._is_connected_to_db = True
         except MySqlError as sql_err:
-            sql_log.error(f"An error occurred during command {query_to_use_db}: {sql_err}")
+            sql_log.error(f"An error occurred during command {query}: {sql_err}")
             self._is_connected_to_db = False
+            return False
+        return True
 
     def check_query(self, query_cmd:str)->Tuple[bool,int]:
         """Check whether the current query is well written.
@@ -106,7 +146,7 @@ class SqlHandler:
         filter_end_comma= ";$"
         filter_comma= ";"
         nb_of_comma_found = 0
-
+    
         if re.findall(filter_end_comma, query_cmd):
             # check there is only one comma, as we want to do only one and simple query
             nb_of_comma_found = len(re.findall(filter_comma, query_cmd))
@@ -299,7 +339,7 @@ class SqlHandler:
         return characteristics
     
     def select_any_from_any(self, items_to_select:str, table_of_selection:str, other_cmds_after_from_cmd:str=None)->Union[List[Any],bool]:
-        """Select any element/item in the chosen table. Function work as the sql command 'SELECT'
+        """Select any element/item in the chosen table. Function works as the sql command 'SELECT'
 
         :e.g:
             - in sql language: 'SELECT * FROM VerbenLernen WHERE infinitive=bleiben;'
@@ -312,6 +352,22 @@ class SqlHandler:
         :param other_cmds_after_from_cmd: other SQL commands as 'WHERE condition' as should be in the query, defaults to None
         :return: List of element selected in the table or False if an error occurred during command execution
         """
+        #TODO:pydantic
+        # get cursor
+        cursor = self._connection_link.cursor()
+        # get query
+        query = Queries.SELECT.value + items_to_select + Queries.FROM.value + table_of_selection + other_cmds_after_from_cmd + ";"
+        
+        try:
+            cursor.execute(query)
+            selection = cursor.fetchall()
+            sql_log.info("Query executed successfully")
+            assert cursor.close(), f"Cursor could not be closed successfully"
+        except MySqlError as sql_err:
+            sql_log.info(f"Could not execute query due to following error: {sql_err}")
+            return False
+        
+        return selection
 
     @connected(is_connected_db_to_check=True)
     def drop_table(self, table_name: str)->bool:
@@ -340,26 +396,175 @@ class SqlHandler:
         return True
 
     @connected
-    def use_db(self, db_name: str):
-        """Select the database to use during the session"""
+    def use_db(self, db_name: str)->bool:
+        """Select the database to use during the session
+
+        :param db_name: Name of the database to switch to
+        :return: True if the command was successfully executed otherwise False
+        """
+        # TODO:pydantic
+        cursor = self._connection_link.cursor()
+        # get query
+        query = Queries.USE.value + db_name + ";"
+        try:
+            cursor.execute(query)
+            sql_log.info(f"Successfully connected to database: {self.db_name}")
+            self._is_connected_to_db = True
+        except MySqlError as sql_err:
+            sql_log.error(f"An error occurred during command {query}: {sql_err}")
+            self._is_connected_to_db = False
+            return False
+        return True
 
     @connected
-    def create_db(self, db_name: str):
-        """Create a database into server"""
+    def create_db(self, db_name: str)->bool:
+        """Create a database into server, just as in sql language
+
+        e.g: 
+            sql'CREATE DATABASE VerbenLernen;' is equivalent of the example below:
+
+            >>> create_db('VerbenLernen')
+
+            Also supported:
+
+            >>> create_db('CREATE DATABASE VerbenLernen;')
+
+        ..Note: If delimiter is forgotten, it will be added and query executed
+
+        :param db_name: Database name to use as a query
+        :return: True If query executed successfully otherwise False
+        """
+        # TODO: check typing
+        # get cursor
+        cursor = self._connection_link.cursor()
+        # check data_to_insert
+        result, number_comma_found = self.check_query(db_name)
+
+        # set query depending of the input and result
+        if Queries.CREATE_DATABASE.value in db_name:
+            if result:
+                query = db_name
+            else:
+                # we suppose that ";" was forgotten at the end
+                query = db_name + ";"
+        else:
+            if result:
+                query = Queries.CREATE_DATABASE.value + db_name
+            else:
+                # we suppose that ";" was forgotten at the end
+                query = Queries.CREATE_DATABASE.value + db_name + ";"
+        
+
+        if number_comma_found > 1: # More than one comma found
+            sql_log.exception("We only support ONE query per command, no more or sub queries in query")
+            raise ValueError(f"Not supported query: {db_name}")
+        else:
+            try:
+                cursor.execute(query)
+                self._connection_link.commit()
+                sql_log.info("Query executed successfully")
+            except MySqlError as sql_err:
+                sql_log.info(f"Could not execute query due to following error: {sql_err}")
+                return False
+        return True        
 
     @connected
-    def drop_db(self, db_name: str):
-        """Delete a database from server"""
+    def drop_db(self, db_name: str)->bool:
+        """Drop a database from the server, just as SQL command 'DROP DATABASE'
+        
+        from sql command, e.g:
+            > DROP DATABASE db_name;
+
+        :param db_name: Database name to delete
+        :return: True if command executed successfully otherwise False
+        """
+        # TODO:pydantic
+        # get cursor
+        cursor = self._connection_link.cursor()
+        # get query
+        query = Queries.DROP_DB.value + db_name + ";"
+        
+        try:
+            cursor.execute(query)
+            self._connection_link.commit()
+            sql_log.info("Query executed successfully")
+        except MySqlError as sql_err:
+            sql_log.info(f"Could not execute query due to following error: {sql_err}")
+            return False
+        
+        return True
     
     @connected(is_connected_db_to_check=True)
-    def create_view(self)->bool:
-        ...
+    def create_view(self, view_name:str, characteristics_to_select:str, ref_table_name:str, any_others_cmd:str)->bool:
+        """Create a view in the current active database, just as in sql language 'CREATE VIEW'
+
+        e.g: 
+            sql'CREATE VIEW A1_Verben AS SELECT * FROM VerbenLernen WHERE level='A1';' is equivalent of the example below:
+
+            >>> create_view("A1_Verben","*","VerbenLernen", "WHERE level=A1")
+
+        :param view_name: Name of the view to create
+        :param characteristics_to_select: Characteristics to select from the table that view should show
+        :param ref_table_name: Reference table that view should take to create the view to show
+        :param any_others_cmd: Any other command as example a condition for view to take items, such as 'WHERE condition=a'
+        :return: True if command was successfully executed otherwise False
+        """
+        # TODO: check typing
+        # get cursor
+        cursor = self._connection_link.cursor()
+        # get query
+        query = Queries.CREATE_VIEW.value + view_name + Queries.AS_SELECT.value + characteristics_to_select + Queries.FROM.value + ref_table_name + any_others_cmd + ";"
+        
+        try:
+            cursor.execute(query)
+            self._connection_link.commit()
+            sql_log.info("Query executed successfully")
+        except MySqlError as sql_err:
+            sql_log.info(f"Could not execute query due to following error: {sql_err}")
+            return False
+        return True
     
     def disconnect_server(self)->bool:
-        ...
-    
+        """Disconnect current connection to the server
+
+        :return: True if command was successfully executed otherwise False
+        """ 
+        cursor = self._connection_link.cursor()
+        try:
+            cursor.close()
+            sql_log.info(f"Connection closed with server data: username: {self.user_name}, hostname: {self.host_name}, port: {self.port}")
+            self._is_connected_to_server = False
+            self._is_connected_to_db = False
+        except MySqlError as sql_err:
+            sql_log.error(f"could not disconnect to server {self.user_name}, due to error: {sql_err}")
+            self._is_connected_to_server = True
+            return False
+        return True
+          
+    @connected
+    def execute_any_query(self, query:str)->bool:
+        """Use this method to execute any SQL query not supported by this class
+
+        :param query: Any SQL query 
+        :return: True if command was executed successfully otherwise False
+        """
+        # TODO: check typing
+        # get cursor
+        cursor = self._connection_link.cursor()
+        try:
+            cursor.execute(query)
+            self._connection_link.commit()
+            sql_log.info("Query executed successfully")
+        except MySqlError as sql_err:
+            sql_log.info(f"Could not execute query due to following error: {sql_err}")
+        return False     
+        
     def __enter__(self):
-        """..."""
-    
+        """Open automatically using context manager command 'with',
+        a new connection to the server and connect to default database given
+        """        
+        self.connect_to_server_and_db()
+
     def __exit__(self):
-        """..."""
+        """Close connection to the server automatically using context manager command 'with'"""
+        self.disconnect_server()
