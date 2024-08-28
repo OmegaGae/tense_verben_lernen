@@ -586,23 +586,52 @@ class SqlHandler:
         from sql command, e.g:
             > DROP DATABASE db_name;
 
+        This is equivalent of the example below:
+
+        e.g:
+            >>> drop_db('VerbenLernen')
+
+            Also supported:
+
+            >>> drop_db('DROP DATABASE VerbenLernen;')
+
         :param db_name: Database name to delete
         :return: True if command executed successfully otherwise False
         """
         # TODO:pydantic
         # get cursor
         cursor = self._connection_link.cursor()
-        # get query
-        query = Queries.DROP_DB.value + db_name + ";"
+
+        # check query
+        result, number_semicolon_found = self.check_query(db_name)
+
+        # set query depending of the input and result
+        if Queries.DROP_DB.value in db_name:
+            if result:
+                query = db_name
+            else:
+                # we suppose that ";" was forgotten at the end
+                query = db_name + ";"
+        else:
+            if result:
+                query = Queries.DROP_DB.value + db_name
+            else:
+                # we suppose that ";" was forgotten at the end
+                query = Queries.DROP_DB.value + db_name + ";"
         
-        try:
-            cursor.execute(query)
-            self._connection_link.commit()
-            sql_log.info("Query executed successfully")
-        except MySqlError as sql_err:
-            sql_log.info(f"Could not execute query due to following error: {sql_err}")
-            return False
-        
+
+        if number_semicolon_found > 1: # More than one comma found
+            sql_log.exception("We only support ONE query per command, no more or sub queries in query")
+            raise ValueError(f"Not supported query: {db_name}")
+        else:
+            try:
+                cursor.execute(query)
+                self._connection_link.commit()
+                sql_log.info("Query executed successfully")
+            except MySqlError as sql_err:
+                sql_log.info(f"Could not execute query due to following error: {sql_err}")
+                return False
+            
         return True
     
     @_connected(is_connected_db_to_check=True)
